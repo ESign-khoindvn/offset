@@ -2,68 +2,120 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>RVA CLEANER - NAM MODDER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVA CLEANER FULL - NAM MODDER</title>
     <style>
         :root { --primary: #00ff41; --bg: #0b0b0b; --card: #161616; --text: #e0e0e0; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        .container { max-width: 100%; margin: auto; }
-        h1 { color: var(--primary); text-align: center; font-size: 20px; text-transform: uppercase; margin: 10px 0; }
-        .upload-box { background: var(--card); padding: 15px; border-radius: 8px; border: 1px dashed #333; text-align: center; margin-bottom: 15px; }
-        .btn-open { background: var(--primary); color: #000; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; display: inline-block; }
-        #status { margin-top: 8px; font-size: 12px; color: #00ff41; }
-        table { width: 100%; border-collapse: collapse; background: var(--card); font-size: 11px; }
-        th, td { padding: 10px 5px; text-align: left; border-bottom: 1px solid #222; }
-        th { color: var(--primary); text-transform: uppercase; }
-        .rva-cell { font-family: monospace; color: #ffca28; font-weight: bold; font-size: 13px; }
-        .patch-cell { font-family: monospace; color: #f44336; }
-        .updated { background: rgba(0, 255, 65, 0.2); }
+        .container { max-width: 1000px; margin: auto; }
+        h1 { color: var(--primary); text-align: center; font-size: 22px; text-transform: uppercase; margin: 15px 0; letter-spacing: 1px; }
+        .upload-box { background: var(--card); padding: 20px; border-radius: 10px; border: 2px dashed #333; text-align: center; margin-bottom: 20px; }
+        .btn-open { background: var(--primary); color: #000; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; transition: 0.3s; }
+        .btn-open:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0,255,65,0.4); }
+        #status { margin-top: 10px; font-size: 13px; color: #00ff41; font-weight: bold; }
+        .table-container { background: var(--card); border-radius: 10px; overflow-x: auto; border: 1px solid #333; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #222; white-space: nowrap; }
+        th { background: #202020; color: var(--primary); text-transform: uppercase; font-size: 11px; }
+        .rva-cell { font-family: 'Consolas', monospace; color: #ffca28; font-weight: bold; font-size: 14px; }
+        .patch-cell { font-family: 'Consolas', monospace; color: #f44336; font-weight: bold; }
+        .method-name { color: #64b5f6; }
+        .updated { background: rgba(0, 255, 65, 0.15) !important; animation: blink 1s; }
+        @keyframes blink { from { background: rgba(0, 255, 65, 0.4); } to { background: rgba(0, 255, 65, 0.15); } }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>RVA CLEANER (NO 0X)</h1>
+    <h1>RVA & PATCH AUTO SYNC</h1>
     <div class="upload-box">
         <label class="btn-open"> CHỌN FILE DUMP.CS <input type="file" id="fIn" style="display:none" onchange="run()"/></label>
-        <div id="status">Sẵn sàng...</div>
+        <div id="status">Chờ tệp tin...</div>
     </div>
-    <table>
-        <thead><tr><th>METHOD</th><th>RVA (CLEAN)</th><th>PATCH</th></tr></thead>
-        <tbody id="list">
-            <tr data-sig="Init(int gameId)"><td>AnoSDK.Init</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-            <tr data-sig="InitEx(int gameId"><td>AnoSDK.InitEx</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-            <tr data-sig="GetReportData()"><td>AnoSDK.Report</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-            <tr data-sig="InitTssSdk()"><td>TssdkSys.Init</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-            <tr data-sig="GetPunishTextStr()"><td>UI.BanText</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-        </tbody>
-    </table>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Method Name</th><th>Clean RVA</th><th>Patch Offset</th></tr>
+            </thead>
+            <tbody id="list">
+                <tr data-sig="Init(int gameId)"><td><span class="method-name">AnoSDK.Init</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="InitEx(int gameId, string key)"><td><span class="method-name">AnoSDK.InitEx</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="SetUserInfo(int entryId, string openId)"><td><span class="method-name">AnoSDK.SetUserInfo</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="SetUserInfoWithLicense"><td><span class="method-name">AnoSDK.SetUserInfoWithLicense</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="GetReportData()"><td><span class="method-name">AnoSDK.GetReportData</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="GetReportData2()"><td><span class="method-name">AnoSDK.GetReportData2</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="GetReportData3()"><td><span class="method-name">AnoSDK.GetReportData3</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="GetReportData4(uint token)"><td><span class="method-name">AnoSDK.GetReportData4</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="EnableGameReport()"><td><span class="method-name">AnoSDK.EnableGameReport</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="DoRun()"><td><span class="method-name">AnoSDKBroadCaster.DoRun</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+
+                <tr data-sig="InitTssSdk()"><td><span class="method-name">TssdkSys.InitTssSdk</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="CreateTssSDKSys"><td><span class="method-name">TssdkSys.CreateTssSDKSys</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="On_GetAntiData(CSPkg msg)"><td><span class="method-name">TssdkSys.On_GetAntiData</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="CreateSecLightAntiDataReportMsg"><td><span class="method-name">TssdkSys.CreateSecLightAntiData</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="SenSecLightAntiDataReportMsg"><td><span class="method-name">TssdkSys.SenSecLightAntiData</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="OnRecvSignatureV2"><td><span class="method-name">TssdkSys.OnRecvSignatureV2</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="OnRecvSignature("><td><span class="method-name">TssdkSys.OnRecvSignature</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+
+                <tr data-sig="TssSdkCom.OnFightStart()"><td><span class="method-name">TssSdkCom.OnFightStart</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="CreateSecBattleAntiDataReportMsg()"><td><span class="method-name">TssSdkCom.CreateSecBattleAntiData</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+
+                <tr data-sig="onTriggerSecurityDataReport"><td><span class="method-name">Lobby.onTriggerSecurity</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="onGameLoginAntidataEvent"><td><span class="method-name">Lobby.onGameLoginAntidata</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+
+                <tr data-sig="ReciveMultiGameAbortPunishNtf"><td><span class="method-name">ReciveMultiGameAbortPunish</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="RecivePlayerBanRsp(CSPkg msg)"><td><span class="method-name">RecivePlayerBanRsp (msg)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="RecivePlayerBanRspMainThread"><td><span class="method-name">RecivePlayerBanRspMainThread</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="Handle_RecivePlayerBanRsp"><td><span class="method-name">Handle_RecivePlayerBanRsp</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="Handle_InBattleJundgePunish_Ntf"><td><span class="method-name">Handle_InBattleJundgePunish</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="RecivePlayerBanRsp(CSPkg pkg)"><td><span class="method-name">RecivePlayerBanRsp (pkg)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+
+                <tr data-sig="RefreshPunishTime()"><td><span class="method-name">UI.RefreshPunishTime</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="GetPunishTextStr()"><td><span class="method-name">UI.GetPunishTextStr</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
 <script>
 async function run() {
     const file = document.getElementById('fIn').files[0];
+    const status = document.getElementById('status');
     if (!file) return;
-    document.getElementById('status').innerText = "Đang quét...";
+
+    status.innerText = "ĐANG QUÉT FILE...";
     const rows = Array.from(document.querySelectorAll('#list tr'));
     const reader = file.stream().getReader();
     const decoder = new TextDecoder();
     let partial = '', lastRVA = '';
+
     while (true) {
         const {done, value} = await reader.read();
         if (done) break;
+
         const lines = (partial + decoder.decode(value)).split(/\r?\n/);
         partial = lines.pop();
+
         for (const line of lines) {
+            // Nhận diện dòng RVA và bốc phần Hex sau 0x
             if (line.includes('RVA: 0x')) {
-                lastRVA = line.split('RVA: 0x')[1].split(' ')[0].toUpperCase();
+                const parts = line.split('RVA: 0x');
+                if (parts[1]) lastRVA = parts[1].split(' ')[0].toUpperCase();
             }
+
+            // Quét danh sách hàm
             rows.forEach(row => {
-                if (line.includes(row.getAttribute('data-sig'))) {
-                    row.querySelector('.rva-cell').innerText = lastRVA;
+                const sig = row.getAttribute('data-sig');
+                if (line.includes(sig)) {
+                    const cell = row.querySelector('.rva-cell');
+                    cell.innerText = lastRVA;
                     row.classList.add('updated');
                 }
             });
         }
     }
-    document.getElementById('status').innerText = "XONG!";
+    status.innerText = "HOÀN TẤT - ĐÃ CẬP NHẬT RVA!";
 }
 </script>
 </body>
