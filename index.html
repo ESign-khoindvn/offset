@@ -2,39 +2,32 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>RVA SCANNER V5.4 - GREEN EDITION</title>
+    <title>RVA SCANNER V6.0 - FULL & CLEAR</title>
     <style>
-        :root { --primary: #00ff41; --bg: #050a05; --card: #0d1a0d; --text: #d0ffd0; --accent: #00e5ff; --lime: #ccff00; }
+        :root { --primary: #00ff41; --bg: #050a05; --card: #0d1a0d; --text: #d0ffd0; --cyan: #00e5ff; --lime: #ccff00; --blue: #2979ff; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        .container { max-width: 1000px; margin: auto; }
+        .container { max-width: 1100px; margin: auto; }
         h1 { color: var(--primary); text-align: center; font-size: 18px; text-transform: uppercase; margin: 15px 0; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,255,65,0.5); }
-        
         .upload-box { background: var(--card); padding: 20px; border-radius: 12px; border: 2px dashed #1b4b1b; text-align: center; margin-bottom: 20px; }
         .btn-open { background: var(--primary); color: #000; padding: 10px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; box-shadow: 0 0 15px rgba(0,255,65,0.3); }
-        #status { margin-top: 10px; font-size: 12px; color: var(--primary); }
-
-        .table-container { background: var(--card); border-radius: 12px; border: 1px solid #1b4b1b; overflow: hidden; margin-bottom: 60px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        #status { margin-top: 10px; font-size: 12px; color: var(--primary); font-weight: bold; }
+        .table-container { background: var(--card); border-radius: 12px; border: 1px solid #1b4b1b; overflow-x: auto; margin-bottom: 80px; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th { background: #132713; color: #4e8c4e; padding: 12px 10px; text-align: left; font-size: 10px; border-bottom: 1px solid #1b4b1b; }
+        th { background: #132713; color: #4e8c4e; padding: 12px 10px; text-align: left; font-size: 10px; border-bottom: 1px solid #1b4b1b; position: sticky; top: 0; z-index: 10; }
         td { padding: 10px; border-bottom: 1px solid #1b4b1b; vertical-align: middle; }
-        
-        .method-name { color: #80ffdf; font-weight: bold; display: block; }
-        .method-sub { font-size: 9px; color: #4e8c4e; font-family: monospace; }
-        
-        .rva-cell { font-family: 'JetBrains Mono', monospace; color: #fff; font-weight: bold; font-size: 14px; cursor: pointer; background: #1a331a; padding: 5px 10px; border-radius: 4px; border: 1px solid #2d5a2d; }
+        .method-name { color: #80ffdf; font-weight: bold; display: block; font-size: 12px; }
+        .rva-cell { font-family: 'JetBrains Mono', monospace; color: #fff; font-weight: bold; font-size: 14px; cursor: pointer; background: #1a331a; padding: 6px 12px; border-radius: 4px; border: 1px solid #2d5a2d; text-align: center; display: inline-block; min-width: 90px; }
         .rva-cell:hover { background: var(--primary); color: #000; }
         
-        /* Chỉnh lại Patch Hex cực dễ nhìn theo ý Nam */
-        .patch-box { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #000; padding: 8px 12px; border-radius: 6px; border: 1px solid #1b4b1b; display: inline-block; }
-        .hex-std { color: #444; margin-right: 4px; } 
-        .hex-d2 { color: var(--accent); font-weight: 800; text-shadow: 0 0 8px var(--accent); margin-right: 4px; text-decoration: underline; } /* D2 - Xanh Ngọc */
-        .hex-52 { color: var(--lime); font-weight: 800; text-shadow: 0 0 8px var(--lime); margin-right: 4px; text-decoration: underline; } /* 52 - Xanh Chuối */
-        .hex-ret { color: #2979ff; margin-left: 5px; font-weight: bold; } /* RET - Xanh Dương */
+        /* Hiện rõ toàn bộ Patch, chỉ highlight D2/52 bằng màu rực */
+        .patch-box { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #000; padding: 8px 12px; border-radius: 6px; border: 1px solid #1b4b1b; display: inline-block; white-space: nowrap; color: #fff; }
+        .highlight-d2 { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); font-weight: 900; text-decoration: underline; }
+        .highlight-52 { color: var(--lime); text-shadow: 0 0 5px var(--lime); font-weight: 900; text-decoration: underline; }
+        .highlight-ret { color: var(--blue); font-weight: bold; }
 
-        .group-header { background: #0a150a; color: var(--primary); font-weight: bold; font-size: 10px; padding: 8px 10px !important; letter-spacing: 1px; }
-        .updated { background: rgba(0, 255, 65, 0.08) !important; }
-        
-        #toast { visibility: hidden; min-width: 160px; background: var(--primary); color: #000; text-align: center; border-radius: 5px; padding: 10px; position: fixed; z-index: 99; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; box-shadow: 0 0 20px rgba(0,255,65,0.5); }
+        .group-header { background: #0a150a; color: var(--primary); font-weight: bold; font-size: 10px; padding: 8px 10px !important; border-left: 4px solid var(--primary); }
+        .updated { background: rgba(0, 255, 65, 0.1) !important; }
+        #toast { visibility: hidden; min-width: 180px; background: var(--primary); color: #000; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 99; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; box-shadow: 0 0 20px rgba(0,255,65,0.5); }
         #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.3s 1.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
@@ -42,33 +35,87 @@
 </head>
 <body>
 
-<div id="toast">COPIED TO CLIPBOARD!</div>
+<div id="toast">ĐÃ SAO CHÉP RVA!</div>
 
 <div class="container">
-    <h1>RVA SCANNER PRO 5.4 🟢</h1>
+    <h1>RVA SCANNER PRO 6.0 (CLEAN FULL)</h1>
     <div class="upload-box">
-        <label class="btn-open"> MỞ FILE DUMP.CS <input type="file" id="fIn" style="display:none" onchange="run()"/></label>
-        <div id="status">READY...</div>
+        <label class="btn-open"> CHỌN FILE DUMP.CS <input type="file" id="fIn" style="display:none" onchange="run()"/></label>
+        <div id="status">SẴN SÀNG QUÉT FILE...</div>
     </div>
 
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th width="45%">METHOD</th>
-                    <th width="20%">RVA</th>
-                    <th width="35%">PATCH (CYAN=D2 | LIME=52)</th>
+                    <th width="45%">METHOD NAME</th>
+                    <th width="20%">RVA (CLICK)</th>
+                    <th width="35%">PATCH HEX (FULL VIEW)</th>
                 </tr>
             </thead>
             <tbody id="list">
-                <tr class="group-header"><td colspan="3">ANOSDK SECURITY LAYER</td></tr>
-                <tr data-sig="void Init(int gameId)"><td><span class="method-name">Init</span><span class="method-sub">AnoSDK.Init</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box"><span class="hex-ret">C0 03 5F D6</span></div></td></tr>
-                <tr data-sig="byte[] GetReportData()"><td><span class="method-name">GetReportData</span><span class="method-sub">AnoSDK.GetReportData</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box"><span class="hex-std">00 00 80</span> <span class="hex-d2">D2</span> <span class="hex-ret">C0 03 5F D6</span></div></td></tr>
-                <tr data-sig="int GetReprotData4Status"><td><span class="method-name">GetReprotData4Status</span><span class="method-sub">AnoSDK.GetStatus</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box"><span class="hex-std">00 00 80</span> <span class="hex-52">52</span> <span class="hex-ret">C0 03 5F D6</span></div></td></tr>
-                
-                <tr class="group-header"><td colspan="3">TSSDK SYSTEM</td></tr>
-                <tr data-sig="CSPkg CreateSecLightAntiDataReportMsg"><td><span class="method-name">CreateSecLight</span><span class="method-sub">Tssdk.CreateMsg</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box"><span class="hex-std">00 00 80</span> <span class="hex-d2">D2</span> <span class="hex-ret">C0 03 5F D6</span></div></td></tr>
-                <tr data-sig="GetPunishTextStr"><td><span class="method-name">GetPunishTextStr</span><span class="method-sub">UI.GetText</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box"><span class="hex-std">00 00 80</span> <span class="hex-d2">D2</span> <span class="hex-ret">C0 03 5F D6</span></div></td></tr>
+                <tr class="group-header"><td colspan="3">--- AnoSDK LAYER ---</td></tr>
+                <tr data-sig="void Init(int gameId)"><td><span class="method-name">Init</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void InitEx(int gameId, string key)"><td><span class="method-name">InitEx</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void SetUserInfo(int entryId, string openId)"><td><span class="method-name">SetUserInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void SetUserInfoWithLicense"><td><span class="method-name">SetUserInfoWithLicense</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void OnPause()"><td><span class="method-name">OnPause</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void OnResume()"><td><span class="method-name">OnResume</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="byte[] GetReportData()"><td><span class="method-name">GetReportData</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="void OnRecvData(byte[] data)"><td><span class="method-name">OnRecvData</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="byte[] GetReportData2()"><td><span class="method-name">GetReportData2</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="byte[] GetReportData3()"><td><span class="method-name">GetReportData3</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="int GetReprotData4Status"><td><span class="method-name">GetReprotData4Status</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-52">52</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="byte[] GetReportData4(uint token)"><td><span class="method-name">GetReportData4</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="void OnRecvSignature(string name"><td><span class="method-name">OnRecvSignature</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void SetLocale(int locale_id)"><td><span class="method-name">SetLocale</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void EnableGameReport()"><td><span class="method-name">EnableGameReport</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="string Ioctl(int request, string cmd)"><td><span class="method-name">Ioctl</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+
+                <tr class="group-header"><td colspan="3">--- AnoSDK BroadCaster ---</td></tr>
+                <tr data-sig="void RegistListener"><td><span class="method-name">RegistListener</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void DoRun()"><td><span class="method-name">DoRun</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void BroadCastInfo"><td><span class="method-name">BroadCastInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="int OpenPipe()"><td><span class="method-name">OpenPipe</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-52">52</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="void ClosePipe()"><td><span class="method-name">ClosePipe</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="string RecvMsg()"><td><span class="method-name">RecvMsg</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="string DecryptInfo"><td><span class="method-name">DecryptInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+
+                <tr class="group-header"><td colspan="3">--- TssdkSys ---</td></tr>
+                <tr data-sig="protected override void Init()"><td><span class="method-name">Init (Override)</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void UpdateVerByteArray()"><td><span class="method-name">UpdateVerByteArray</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void InitTssSdk()"><td><span class="method-name">InitTssSdk</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void OnAccountLogin()"><td><span class="method-name">OnAccountLogin</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void setUserInfo()"><td><span class="method-name">setUserInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void CreateTssSDKSys"><td><span class="method-name">CreateTssSDKSys</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void OnApplicationPause"><td><span class="method-name">OnApplicationPause</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void On_GetAntiData"><td><span class="method-name">On_GetAntiData</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="CSPkg CreateSecLightAntiDataReportMsg"><td><span class="method-name">CreateSecLight</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="void SenSecLightAntiDataReportMsg"><td><span class="method-name">SenSecLight</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void OnRecvSignatureV2"><td><span class="method-name">OnRecvSignatureV2</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void OnRecvSignature"><td><span class="method-name">OnRecvSignature</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void Update()"><td><span class="method-name">Update</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+
+                <tr class="group-header"><td colspan="3">--- TssSdkCom ---</td></tr>
+                <tr data-sig="void OnFightStart()"><td><span class="method-name">OnFightStart</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="void OnFightOver()"><td><span class="method-name">OnFightOver</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="CSPkg CreateSecBattleAntiDataReportMsg"><td><span class="method-name">CreateSecBattle</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
+                <tr data-sig="iFixBaseProxy_OnFightStart"><td><span class="method-name">iFixProxy_OnFightStart</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="iFixBaseProxy_OnFightOver"><td><span class="method-name">iFixProxy_OnFightOver</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+
+                <tr class="group-header"><td colspan="3">--- Lobby & Ban Handlers ---</td></tr>
+                <tr data-sig="onTriggerSecurityDataReport"><td><span class="method-name">onTriggerSecurity</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="onGameLoginAntidataEvent"><td><span class="method-name">onGameLoginAntidata</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="ReciveMultiGameAbortPunishNtf"><td><span class="method-name">MultiGameAbortPunish</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="RecivePlayerBanRsp(CSPkg msg)"><td><span class="method-name">PlayerBanRsp (msg)</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="RecivePlayerBanRspMainThread"><td><span class="method-name">PlayerBanRspMain</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="Handle_RecivePlayerBanRsp"><td><span class="method-name">Handle_PlayerBanRsp</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="Handle_InBattleJundgePunish"><td><span class="method-name">BattleJudgePunish</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="RecivePlayerBanRsp(CSPkg pkg)"><td><span class="method-name">PlayerBanRsp (pkg)</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+
+                <tr class="group-header"><td colspan="3">--- UI Ban ---</td></tr>
+                <tr data-sig="RefreshPunishTime"><td><span class="method-name">RefreshPunishTime</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0 03 5F D6</div></td></tr>
+                <tr data-sig="GetPunishTextStr"><td><span class="method-name">GetPunishTextStr</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">00 00 80 <span class="highlight-d2">D2</span> <span class="highlight-ret">C0 03 5F D6</span></div></td></tr>
             </tbody>
         </table>
     </div>
@@ -88,7 +135,8 @@ function copy(cell) {
 async function run() {
     const file = document.getElementById('fIn').files[0];
     if (!file) return;
-    document.getElementById('status').innerText = "SCANNING: " + file.name.toUpperCase();
+    document.getElementById('status').innerText = "ĐANG PHÂN TÍCH FILE...";
+    
     const rows = Array.from(document.querySelectorAll('#list tr[data-sig]'));
     const reader = file.stream().getReader();
     const decoder = new TextDecoder();
@@ -104,6 +152,7 @@ async function run() {
         for (const line of lines) {
             const rvaMatch = line.match(/RVA:\s*0x([0-9A-Fa-f]+)/i);
             if (rvaMatch) { lastRVA = rvaMatch[1].toUpperCase(); }
+            
             rows.forEach(row => {
                 const sig = row.getAttribute('data-sig');
                 if (line.includes(sig) && lastRVA) {
@@ -114,7 +163,7 @@ async function run() {
             });
         }
     }
-    document.getElementById('status').innerText = "SCAN COMPLETE!";
+    document.getElementById('status').innerText = "QUÉT XONG! CHẠM RVA ĐỂ CHÉP.";
 }
 </script>
 </body>
