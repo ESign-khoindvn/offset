@@ -2,31 +2,30 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>RVA CLEANER FULL 31 METHODS - NAM MODDER</title>
+    <title>RVA SCANNER PRO - NAM MODDER</title>
     <style>
         :root { --primary: #00ff41; --bg: #0b0b0b; --card: #161616; --text: #e0e0e0; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
         .container { max-width: 1100px; margin: auto; }
-        h1 { color: var(--primary); text-align: center; font-size: 20px; text-transform: uppercase; margin: 15px 0; letter-spacing: 1px; }
+        h1 { color: var(--primary); text-align: center; font-size: 20px; text-transform: uppercase; margin: 15px 0; }
         .upload-box { background: var(--card); padding: 20px; border-radius: 10px; border: 2px dashed #333; text-align: center; margin-bottom: 20px; }
-        .btn-open { background: var(--primary); color: #000; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; transition: 0.3s; }
-        .btn-open:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0,255,65,0.4); }
+        .btn-open { background: var(--primary); color: #000; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; }
         #status { margin-top: 10px; font-size: 13px; color: #00ff41; font-weight: bold; }
         .table-container { background: var(--card); border-radius: 10px; border: 1px solid #333; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #222; white-space: nowrap; }
         th { background: #202020; color: var(--primary); text-transform: uppercase; }
-        .rva-cell { font-family: 'Consolas', monospace; color: #ffca28; font-weight: bold; font-size: 13px; }
+        .rva-cell { font-family: 'Consolas', monospace; color: #ffca28; font-weight: bold; font-size: 14px; }
         .patch-cell { font-family: 'Consolas', monospace; color: #f44336; font-weight: bold; }
-        .method-name { color: #64b5f6; }
+        .method-name { color: #64b5f6; font-size: 11px; }
         .updated { background: rgba(0, 255, 65, 0.2) !important; transition: 0.3s; }
-        .group-header { background: #222; color: #aaa; font-weight: bold; font-size: 10px; }
+        .group-tag { background: #333; padding: 2px 5px; border-radius: 3px; font-size: 9px; color: #aaa; margin-right: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>RVA & PATCH AUTO SYNC (FULL 31 METHODS)</h1>
+    <h1>RVA & PATCH AUTO SYNC (29 METHODS)</h1>
     <div class="upload-box">
         <label class="btn-open"> CHỌN FILE DUMP.CS <input type="file" id="fIn" style="display:none" onchange="run()"/></label>
         <div id="status">Sẵn sàng quét...</div>
@@ -35,47 +34,43 @@
     <div class="table-container">
         <table>
             <thead>
-                <tr><th>Method Name</th><th>Clean RVA</th><th>Patch Offset</th></tr>
+                <tr><th>Function Signature</th><th>Clean RVA (No 0x)</th><th>Patch Offset</th></tr>
             </thead>
             <tbody id="list">
-                <tr class="group-header"><td colspan="3">--- AnoSDK ---</td></tr>
-                <tr data-sig="Init(int gameId)"><td>AnoSDK.Init</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="InitEx(int gameId"><td>AnoSDK.InitEx</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="SetUserInfo(int entryId"><td>AnoSDK.SetUserInfo</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="SetUserInfoWithLicense"><td>AnoSDK.SetUserInfoWithLicense</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="GetReportData()"><td>AnoSDK.GetReportData</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-                <tr data-sig="GetReportData2()"><td>AnoSDK.GetReportData2</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-                <tr data-sig="GetReportData3()"><td>AnoSDK.GetReportData3</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-                <tr data-sig="GetReportData4(uint token)"><td>AnoSDK.GetReportData4</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-                <tr data-sig="EnableGameReport()"><td>AnoSDK.EnableGameReport</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="DoRun()"><td>AnoSDKBroadCaster.DoRun</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void Init(int gameId)"><td><span class="group-tag">AnoSDK</span><span class="method-name">Init(int gameId)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void InitEx(int gameId, string key)"><td><span class="group-tag">AnoSDK</span><span class="method-name">InitEx(int gameId, string key)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void SetUserInfo(int entryId, string openId)"><td><span class="group-tag">AnoSDK</span><span class="method-name">SetUserInfo(int entryId, string openId)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void SetUserInfoWithLicense(int entryId, string openId, string license)"><td><span class="group-tag">AnoSDK</span><span class="method-name">SetUserInfoWithLicense(...)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="byte[] GetReportData()"><td><span class="group-tag">AnoSDK</span><span class="method-name">GetReportData()</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="byte[] GetReportData2()"><td><span class="group-tag">AnoSDK</span><span class="method-name">GetReportData2()</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="byte[] GetReportData3()"><td><span class="group-tag">AnoSDK</span><span class="method-name">GetReportData3()</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="byte[] GetReportData4(uint token)"><td><span class="group-tag">AnoSDK</span><span class="method-name">GetReportData4(uint token)</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="void EnableGameReport()"><td><span class="group-tag">AnoSDK</span><span class="method-name">EnableGameReport()</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void DoRun()"><td><span class="group-tag">AnoSDK</span><span class="method-name">DoRun()</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
 
-                <tr class="group-header"><td colspan="3">--- TssdkSys ---</td></tr>
-                <tr data-sig="InitTssSdk()"><td>TssdkSys.InitTssSdk</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="CreateTssSDKSys"><td>TssdkSys.CreateTssSDKSys</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="On_GetAntiData"><td>TssdkSys.On_GetAntiData</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="CreateSecLightAntiDataReportMsg"><td>TssdkSys.CreateSecLight</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-                <tr data-sig="SenSecLightAntiDataReportMsg"><td>TssdkSys.SenSecLight</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="OnRecvSignatureV2"><td>TssdkSys.OnRecvSignatureV2</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="OnRecvSignature"><td>TssdkSys.OnRecvSignature</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void InitTssSdk()"><td><span class="group-tag">TSS</span><span class="method-name">InitTssSdk()</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void CreateTssSDKSys(string openId, GCloudChannel platform)"><td><span class="group-tag">TSS</span><span class="method-name">CreateTssSDKSys(...)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void On_GetAntiData(CSPkg msg)"><td><span class="group-tag">TSS</span><span class="method-name">On_GetAntiData(msg)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="CSPkg CreateSecLightAntiDataReportMsg(int dataSource)"><td><span class="group-tag">TSS</span><span class="method-name">CreateSecLightAntiData(...)</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="void SenSecLightAntiDataReportMsg(TssDataSourceType eDataSource)"><td><span class="group-tag">TSS</span><span class="method-name">SenSecLightAntiData(...)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void OnRecvSignatureV2(COMDT_TSS_LIGHT_FEATURE_DATA data)"><td><span class="group-tag">TSS</span><span class="method-name">OnRecvSignatureV2(...)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void OnRecvSignature(SCPKG_LIGHT_FEATRUE_DATA_NTF rsp)"><td><span class="group-tag">TSS</span><span class="method-name">OnRecvSignature(...)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
 
-                <tr class="group-header"><td colspan="3">--- TssSdkCom & Lobby ---</td></tr>
-                <tr data-sig="TssSdkCom.OnFightStart()"><td>TssSdkCom.OnFightStart</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="CreateSecBattleAntiDataReportMsg()"><td>TssSdkCom.CreateSecBattle</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
-                <tr data-sig="onTriggerSecurityDataReport"><td>Lobby.onTriggerSecurity</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="onGameLoginAntidataEvent"><td>Lobby.onGameLoginAntidata</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void OnFightStart()"><td><span class="group-tag">Com</span><span class="method-name">OnFightStart()</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="CSPkg CreateSecBattleAntiDataReportMsg()"><td><span class="group-tag">Com</span><span class="method-name">CreateSecBattleAntiData()</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
 
-                <tr class="group-header"><td colspan="3">--- Ban & Punish ---</td></tr>
-                <tr data-sig="ReciveMultiGameAbortPunishNtf"><td>ReciveMultiGameAbortPunish</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="RecivePlayerBanRsp(CSPkg msg)"><td>RecivePlayerBanRsp (msg)</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="RecivePlayerBanRspMainThread"><td>RecivePlayerBanRspMain</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="Handle_RecivePlayerBanRsp"><td>Handle_RecivePlayerBanRsp</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="Handle_InBattleJundgePunish_Ntf"><td>Handle_InBattleJundge</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="RecivePlayerBanRsp(CSPkg pkg)"><td>RecivePlayerBanRsp (pkg)</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void onTriggerSecurityDataReport(CSPkg msg)"><td><span class="group-tag">Lobby</span><span class="method-name">onTriggerSecurityDataReport</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void onGameLoginAntidataEvent(CSPkg msg)"><td><span class="group-tag">Lobby</span><span class="method-name">onGameLoginAntidataEvent</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
 
-                <tr class="group-header"><td colspan="3">--- UI ---</td></tr>
-                <tr data-sig="RefreshPunishTime()"><td>UI.RefreshPunishTime</td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
-                <tr data-sig="GetPunishTextStr()"><td>UI.GetPunishTextStr</td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="void ReciveMultiGameAbortPunishNtf(CSPkg msg)"><td><span class="group-tag">Ban</span><span class="method-name">ReciveMultiGameAbortPunish</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void RecivePlayerBanRsp(CSPkg msg)"><td><span class="group-tag">Ban</span><span class="method-name">RecivePlayerBanRsp (msg)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void RecivePlayerBanRspMainThread(CSPkg msg)"><td><span class="group-tag">Ban</span><span class="method-name">RecivePlayerBanRspMain</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void Handle_RecivePlayerBanRsp(EnginePipeCmd cmd)"><td><span class="group-tag">Ban</span><span class="method-name">Handle_RecivePlayerBanRsp</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void Handle_InBattleJundgePunish_Ntf(SCPKG_TALK_JUDGE_PUNISH_NTF obj)"><td><span class="group-tag">Ban</span><span class="method-name">Handle_InBattleJundge</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="void RecivePlayerBanRsp(CSPkg pkg)"><td><span class="group-tag">Ban</span><span class="method-name">RecivePlayerBanRsp (pkg)</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+
+                <tr data-sig="void RefreshPunishTime()"><td><span class="group-tag">UI</span><span class="method-name">RefreshPunishTime()</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="string GetPunishTextStr()"><td><span class="group-tag">UI</span><span class="method-name">GetPunishTextStr()</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
             </tbody>
         </table>
     </div>
@@ -85,7 +80,7 @@
 async function run() {
     const file = document.getElementById('fIn').files[0];
     if (!file) return;
-    document.getElementById('status').innerText = "ĐANG QUÉT " + file.name.toUpperCase() + "...";
+    document.getElementById('status').innerText = "ĐANG QUÉT: " + file.name.toUpperCase();
     
     const rows = Array.from(document.querySelectorAll('#list tr[data-sig]'));
     const reader = file.stream().getReader();
@@ -100,11 +95,15 @@ async function run() {
         partial = lines.pop();
 
         for (const line of lines) {
+            // Regex bốc Clean RVA (Chỉ lấy phần Hex sau 0x)
             const rvaMatch = line.match(/RVA:\s*0x([0-9A-Fa-f]+)/i);
-            if (rvaMatch) { lastRVA = rvaMatch[1].toUpperCase(); }
+            if (rvaMatch) { 
+                lastRVA = rvaMatch[1].toUpperCase(); 
+            }
 
             rows.forEach(row => {
                 const sig = row.getAttribute('data-sig');
+                // Kiểm tra nếu dòng chứa signature hàm
                 if (line.includes(sig) && lastRVA) {
                     const cell = row.querySelector('.rva-cell');
                     cell.innerText = lastRVA;
@@ -113,7 +112,7 @@ async function run() {
             });
         }
     }
-    document.getElementById('status').innerText = "ĐÃ QUÉT XONG TẤT CẢ HÀM!";
+    document.getElementById('status').innerText = "HOÀN TẤT!";
 }
 </script>
 </body>
