@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Nam Modder - Clean RVA Extractor</title>
+    <style>
+        :root { --primary: #00ff41; --bg: #0b0b0b; --card: #161616; --text: #e0e0e0; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        h1 { color: var(--primary); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .upload-box { background: var(--card); padding: 25px; border-radius: 12px; border: 2px dashed #333; text-align: center; margin-bottom: 25px; }
+        input[type="file"] { display: none; }
+        .btn-open { background: var(--primary); color: #000; padding: 12px 35px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; transition: 0.3s; }
+        .btn-open:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0,255,65,0.4); }
+        
+        #status { margin-top: 15px; font-size: 13px; color: #888; }
+
+        .table-container { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #333; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #252525; }
+        th { background: #202020; color: var(--primary); font-size: 11px; text-transform: uppercase; }
+        
+        .rva-cell { font-family: 'Consolas', monospace; color: #ffca28; font-weight: bold; font-size: 16px; letter-spacing: 1px; }
+        .patch-cell { font-family: 'Consolas', monospace; color: #f44336; font-weight: bold; }
+        .method-name { color: #64b5f6; font-size: 13px; }
+        .updated { background: rgba(0, 255, 65, 0.15) !important; transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>RVA CLEANER (NO 0x)</h1>
+
+    <div class="upload-box">
+        <label class="btn-open">
+            <input type="file" id="fileInput" accept=".cs,.txt" onchange="handleFile()"/>
+            CHỌN FILE DUMP.CS
+        </label>
+        <div id="status">Sẵn sàng quét...</div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Method Name</th>
+                    <th>Clean RVA (No 0x)</th>
+                    <th>Patch Offset</th>
+                </tr>
+            </thead>
+            <tbody id="rvaList">
+                <tr data-sig="AnoSDK.Init(int gameId)"><td><span class="method-name">AnoSDK.Init</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="AnoSDK.InitEx(int gameId, string key)"><td><span class="method-name">AnoSDK.InitEx</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="AnoSDK.GetReportData()"><td><span class="method-name">AnoSDK.GetReportData</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                <tr data-sig="TssdkSys.InitTssSdk()"><td><span class="method-name">TssdkSys.InitTssSdk</span></td><td class="rva-cell">...</td><td class="patch-cell">C0 03 5F D6</td></tr>
+                <tr data-sig="CUIPunishBanLock.GetPunishTextStr()"><td><span class="method-name">CUIPunishBanLock.GetPunishTextStr</span></td><td class="rva-cell">...</td><td class="patch-cell">00 00 80 52 C0 03 5F D6</td></tr>
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+async function handleFile() {
+    const file = document.getElementById('fileInput').files[0];
+    const status = document.getElementById('status');
+    if (!file) return;
+
+    status.innerText = "Đang xử lý: " + file.name;
+    
+    const rows = Array.from(document.querySelectorAll('#rvaList tr'));
+    const sigMap = rows.map(row => ({
+        sig: row.getAttribute('data-sig'),
+        row: row,
+        found: false
+    }));
+
+    const reader = file.stream().getReader();
+    const decoder = new TextDecoder();
+    let partialLine = '';
+    let lastRVA = '';
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = (partialLine + chunk).split(/\r?\n/);
+        partialLine = lines.pop();
+
+        for (const line of lines) {
+            if (line.includes('RVA:')) {
+                const match = line.match(/RVA:\s*0x([0-9A-Fa-f]+)/); // Chỉ lấy phần sau 0x
+                if (match) lastRVA = match[1].toUpperCase();
+            }
+
+            for (let item of sigMap) {
+                if (!item.found && line.includes(item.sig)) {
+                    const cell = item.row.querySelector('.rva-cell');
+                    cell.innerText = lastRVA; // Điền RVA đã bỏ 0x
+                    item.row.classList.add('updated');
+                    item.found = true;
+                }
+            }
+        }
+    }
+    status.innerText = "Đã cập nhật xong RVA gọn (không có 0x).";
+}
+</script>
+
+</body>
+</html>
