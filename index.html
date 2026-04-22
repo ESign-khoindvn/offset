@@ -219,9 +219,12 @@ async function run() {
             const cm = line.match(/^(?:public|private|internal|protected|sealed|abstract).*?\bclass\s+(\w+)/);
             if (cm) { currentClass = cm[1]; continue; }
 
-            // extract RVA comment
+            // extract RVA — parse int + pad 8 chars tránh lệch leading zero
             const rm = line.match(/\/\/\s*RVA:\s*0x([0-9A-Fa-f]+)/i);
-            if (rm) { lastRVA = rm[1].toUpperCase(); continue; }
+            if (rm) {
+                lastRVA = parseInt(rm[1], 16).toString(16).toUpperCase().padStart(8, '0');
+                continue;
+            }
 
             // match each entry
             for (const [id, , sig, reqClass] of ENTRIES) {
