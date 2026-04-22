@@ -1,154 +1,258 @@
 <!DOCTYPE html>
+
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RVA SCANNER PRO V8.4</title>
+    <title>RVA SCANNER PRO V8.5</title>
     <style>
         :root { --primary: #00ff41; --bg: #050a05; --card: #0d1a0d; --text: #d0ffd0; --cyan: #00e5ff; --lime: #ccff00; --red: #ff3e3e; --orange: #ff9100; --yellow: #ffee00; }
+        * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
         .container { max-width: 1100px; margin: auto; }
         h1 { color: var(--primary); text-align: center; font-size: 18px; text-transform: uppercase; margin: 15px 0; letter-spacing: 2px; }
-        .upload-box { background: var(--card); padding: 20px; border-radius: 12px; border: 2px dashed #1b4b1b; text-align: center; margin-bottom: 20px; }
-        .btn-open { background: var(--primary); color: #000; padding: 10px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; box-shadow: 0 0 15px rgba(0,255,65,0.3); }
+        .upload-box { background: var(--card); padding: 20px; border-radius: 12px; border: 2px dashed #1b4b1b; text-align: center; margin-bottom: 15px; }
+        .btn-open { background: var(--primary); color: #000; padding: 10px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; box-shadow: 0 0 15px rgba(0,255,65,0.3); font-size: 13px; }
         #status { margin-top: 10px; font-size: 12px; color: var(--primary); font-weight: bold; }
+        #progress { margin-top: 5px; font-size: 11px; color: #4e8c4e; height: 16px; }
+        .stats-bar { display: flex; gap: 12px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
+        .stat-box { background: var(--card); border: 1px solid #1b4b1b; border-radius: 8px; padding: 7px 18px; font-size: 10px; text-align: center; }
+        .stat-box .val { color: var(--primary); font-size: 22px; font-weight: bold; display: block; }
         .table-container { background: var(--card); border-radius: 12px; border: 1px solid #1b4b1b; overflow-x: auto; margin-bottom: 80px; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th { background: #132713; color: #4e8c4e; padding: 12px 10px; text-align: left; font-size: 10px; border-bottom: 1px solid #1b4b1b; position: sticky; top: 0; z-index: 10; }
-        td { padding: 10px; border-bottom: 1px solid #1b4b1b; vertical-align: middle; }
+        th { background: #132713; color: #4e8c4e; padding: 11px 10px; text-align: left; font-size: 10px; border-bottom: 1px solid #1b4b1b; position: sticky; top: 0; z-index: 10; }
+        td { padding: 9px 10px; border-bottom: 1px solid #0d200d; vertical-align: middle; }
         .method-name { color: #80ffdf; font-weight: bold; display: block; font-size: 11.5px; }
-        .rva-cell { font-family: 'JetBrains Mono', monospace; color: #fff; font-weight: bold; font-size: 14px; cursor: pointer; background: #1a331a; padding: 6px 12px; border-radius: 4px; border: 1px solid #2d5a2d; text-align: center; display: inline-block; min-width: 95px; }
-        .rva-cell:hover { background: var(--primary); color: #000; }
-        .patch-box { font-family: 'JetBrains Mono', monospace; font-size: 10px; background: #000; padding: 8px 12px; border-radius: 6px; border: 1px solid #1b4b1b; display: inline-block; white-space: nowrap; color: #fff; }
-        .group-header { color: #fff; font-weight: bold; font-size: 11px; padding: 10px !important; border-left: 5px solid #fff; }
-        .g-red { background: var(--red); }
-        .g-orange { background: var(--orange); color: black; border-left-color: #000; }
-        .g-yellow { background: var(--yellow); color: black; border-left-color: #000; }
-        .updated { background: rgba(0, 255, 65, 0.1) !important; }
-        #toast { visibility: hidden; min-width: 180px; background: var(--primary); color: #000; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 99; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; }
-        #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.3s 1.5s; }
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        .rva-cell { font-family: 'Courier New', monospace; color: #556655; font-weight: bold; font-size: 13px; cursor: default; background: #0d1a0d; padding: 6px 12px; border-radius: 4px; border: 1px solid #1b4b1b; text-align: center; display: inline-block; min-width: 115px; transition: all 0.2s; user-select: none; }
+        .rva-cell.found { color: #fff; cursor: pointer; background: #1a331a; border-color: #2d5a2d; }
+        .rva-cell.found:hover { background: var(--primary); color: #000; border-color: var(--primary); }
+        .rva-cell.found:active { transform: scale(0.97); }
+        .patch-box { font-family: 'Courier New', monospace; font-size: 10px; background: #000; padding: 7px 11px; border-radius: 6px; border: 1px solid #1b4b1b; display: inline-block; white-space: nowrap; }
+        .group-header td { font-weight: bold; font-size: 11px; padding: 9px 12px !important; }
+        .g-red td    { background: #200808; border-left: 4px solid var(--red);    color: var(--red) !important; }
+        .g-orange td { background: #1a1000; border-left: 4px solid var(--orange); color: var(--orange) !important; }
+        .g-yellow td { background: #151500; border-left: 4px solid var(--yellow); color: var(--yellow) !important; }
+        tr.updated td { background: rgba(0,255,65,0.04) !important; }
+        #toast { visibility: hidden; min-width: 160px; background: var(--primary); color: #000; text-align: center; border-radius: 8px; padding: 11px 20px; position: fixed; z-index: 99; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; font-size: 13px; }
+        #toast.show { visibility: visible; animation: fin 0.25s, fout 0.3s 1.4s forwards; }
+        @keyframes fin  { from{bottom:0;opacity:0} to{bottom:30px;opacity:1} }
+        @keyframes fout { from{opacity:1} to{opacity:0} }
     </style>
 </head>
 <body>
-
-<div id="toast">COPIED RVA!</div>
-
+<div id="toast">✓ COPIED!</div>
 <div class="container">
-    <h1>RVA SCANNER PRO 8.4</h1>
-    <div class="upload-box">
-        <label class="btn-open"> CHỌN FILE DUMP.CS <input type="file" id="fIn" style="display:none" onchange="run()"/></label>
-        <div id="status">CHỜ TỆP...</div>
-    </div>
+    <h1>⚡ RVA SCANNER PRO 8.5</h1>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr><th>FUNCTION NAME</th><th>RVA (CLICK)</th><th>PATCH HEX</th></tr>
-            </thead>
-            <tbody id="list">
-                <tr class="group-header g-red"><td colspan="3">🔴 AnoSDK & FRAME SYNC</td></tr>
-                <tr data-sig="InitEx"><td><span class="method-name">AnoSDK.InitEx</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="AnoSDKInitEx"><td><span class="method-name">AnoSDK.AnoSDKInitEx</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="AnoSDKOnResume"><td><span class="method-name">AnoSDK.AnoSDKOnResume</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box" style="color:var(--cyan)">000080D2C0035FD6</div></td></tr>
-                <tr data-sig="AnoSDKDelReportData4"><td><span class="method-name">AnoSDK.AnoSDKDelReportData4</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="AnoSDKFree"><td><span class="method-name">AnoSDK.AnoSDKFree</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="Reset"><td><span class="method-name">LSynchrReport.Reset</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="CloseUpload"><td><span class="method-name">LSynchrReport.CloseUpload</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="OnNotifyHashCheckUnsyncByDs"><td><span class="method-name">LSynchrReport.OnNotifyHash</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="DequeHashValueByFrameNum"><td><span class="method-name">LSynchrReport.DequeHash</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="OnActorRevive"><td><span class="method-name">LFrameSync.OnActorRevive</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="CalcuBattleHash"><td><span class="method-name">LFrameSync.CalcuBattleHash</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="SampleAndSendFrameSyncData"><td><span class="method-name">LFrameSync.SampleSend</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
+```
+<div class="stats-bar">
+    <div class="stat-box"><span class="val" id="s-found">0</span>FOUND</div>
+    <div class="stat-box"><span class="val">47</span>TOTAL</div>
+    <div class="stat-box"><span class="val" id="s-pct">0%</span>MATCH</div>
+</div>
 
-                <tr class="group-header g-orange"><td colspan="3">🟠 STATISTICS & REPORT</td></tr>
-                <tr data-sig="IsNeedReportCompetitionData"><td><span class="method-name">Stat.IsNeedReport</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="ResetCheetCommandSetWarmBattleResultInfo"><td><span class="method-name">Stat.ResetCheet (HOOK)</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box" style="color:var(--lime)">F17F049031E2029120021F</div></td></tr>
-                <tr data-sig="CreatePetData"><td><span class="method-name">Stat.CreatePetData</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="CreateDragonStatistInfo"><td><span class="method-name">Stat.CreateDragonInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="GeneralShenFuData"><td><span class="method-name">Stat.GeneralShenFu</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="VerifyCondition"><td><span class="method-name">Stat.VerifyCondition</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="ReportEventOpenApp"><td><span class="method-name">Apollo.ReportEventOpenApp</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="AddCacheReport"><td><span class="method-name">Apollo.AddCacheReport</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="OnLogin"><td><span class="method-name">Apollo.OnLogin</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="TryReportInfo"><td><span class="method-name">Firebase.TryReportInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="reportInfo"><td><span class="method-name">Firebase.reportInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="GetPushExtraDictObjects"><td><span class="method-name">Firebase.GetPushExtra</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="TrySkipGuideLevel1"><td><span class="method-name">Lobby.TrySkipGuide</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="onTriggerSecurityDataReport"><td><span class="method-name">Lobby.onTriggerSecurity</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="cacheGameInfoData"><td><span class="method-name">Settlement.cacheInfo</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="ReportTLogDataToLobby"><td><span class="method-name">Settlement.ReportTLog</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="CommonOnRequestAddMatchBlack"><td><span class="method-name">Settlement.AddMatchBlack</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
+<div class="upload-box">
+    <label class="btn-open">📂 CHỌN FILE DUMP.CS
+        <input type="file" id="fIn" style="display:none" accept=".cs,.txt" onchange="run()"/>
+    </label>
+    <div id="status">⏳ CHỜ TỆP DUMP.CS...</div>
+    <div id="progress"></div>
+</div>
 
-                <tr class="group-header g-yellow"><td colspan="3">🟡 CHAT & COMPLAINT SYSTEM</td></tr>
-                <tr data-sig="CChatNetUT_On_Chat_NTFMainThread"><td><span class="method-name">CChat.OnChatNTF</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="CChatNetUT_On_Chat_Complaint_NTF"><td><span class="method-name">CChat.OnComplaintNTF</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="CChatNetUT_On_Chat_Complaint_RSP"><td><span class="method-name">CChat.OnComplaintRSP</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="RspSetChatRegion"><td><span class="method-name">CChat.RspSetRegion</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="On_Chat_Complaint_NTF"><td><span class="method-name">CChat.ComplaintNTF (V2)</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="Send_Loaidng_Chat"><td><span class="method-name">InBattle.LoadingChat</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="SendInBattleMsg_TranslateChat"><td><span class="method-name">InBattle.Translate</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="SendInBattleMsg_PreConfig"><td><span class="method-name">InBattle.PreConfig</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="OnSendInBattleMsg_InputChat"><td><span class="method-name">InBattle.InputChat</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="SendInBattleMsg_ChatComplaint"><td><span class="method-name">InBattle.Complaint</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="Handle_SendSendInLoaing_LikeChat"><td><span class="method-name">Handle.LikeChat</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="Handle_SendInBattleMsg_ChatComplaint"><td><span class="method-name">Handle.Complaint</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="Handle_On_Chat_NTF"><td><span class="method-name">Builder.ChatNTF</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="Handle_On_ChatComplaint_NTF"><td><span class="method-name">Builder.ComplaintNTF</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="Handle_On_ChatComplaint_RSP"><td><span class="method-name">Builder.ComplaintRSP</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-                <tr data-sig="On_ChatRealtimeVoice_Complaint_RSP"><td><span class="method-name">Relay.VoiceComplaint</span></td><td><div class="rva-cell" onclick="copy(this)">...</div></td><td><div class="patch-box">C0035FD6</div></td></tr>
-            </tbody>
-        </table>
-    </div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th style="width:32%">FUNCTION</th>
+                <th style="width:20%">RVA (CLICK TO COPY)</th>
+                <th>PATCH BYTES</th>
+            </tr>
+        </thead>
+        <tbody id="list"></tbody>
+    </table>
+</div>
+```
+
 </div>
 
 <script>
-function copy(cell) {
-    const text = cell.innerText;
-    if (text === "...") return;
-    navigator.clipboard.writeText(text).then(() => {
-        const toast = document.getElementById("toast");
-        toast.className = "show";
-        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 1500);
+// ─── ENTRY FORMAT ─────────────────────────────────────────────────────────────
+// [id, displayName, sig_to_match, requireClass, group, patchHex, patchColor]
+// sig_to_match  : substring cần có trong dòng method signature
+// requireClass  : tên class phải match (null = bất kỳ)
+const ENTRIES = [
+    // 🔴 AnoSDK
+    ["ano_initex",    "AnoSDK.InitEx",              "public static void InitEx(int gameId",             "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
+    ["ano_sdkinitex", "AnoSDK.AnoSDKInitEx",         "AnoSDKInitEx(int gameID",                          "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
+    ["ano_resume",    "AnoSDK.AnoSDKOnResume",        "AnoSDKOnResume()",                                 "AnoSDK",             "red",    "00 00 80 D2  C0 03 5F D6",              "cyan"],
+    ["ano_delreport", "AnoSDK.AnoSDKDelReportData4",  "AnoSDKDelReportData4(",                            "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
+    ["ano_free",      "AnoSDK.AnoSDKFree",            "AnoSDKFree(",                                      "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
+    // 🔴 LSynchrReport
+    ["sync_reset",    "LSynchrReport.Reset",          "public void Reset()",                              "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
+    ["sync_close",    "LSynchrReport.CloseUpload",    "private void CloseUpload()",                       "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
+    ["sync_notify",   "LSynchrReport.OnNotifyHash",   "OnNotifyHashCheckUnsyncByDs(",                     "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
+    ["sync_deque",    "LSynchrReport.DequeHash",      "DequeHashValueByFrameNum(",                        "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
+    // 🔴 LFrameSyncBattleLogic
+    ["fs_revive",     "LFrameSync.OnActorRevive",     "private void OnActorRevive(ref LDefaultGame",      "LFrameSyncBattleLogic","red",   "C0 03 5F D6",                          ""],
+    ["fs_hash",       "LFrameSync.CalcuBattleHash",   "CalcuBattleHash()",                                "LFrameSyncBattleLogic","red",   "C0 03 5F D6",                          ""],
+    ["fs_sample",     "LFrameSync.SampleSendFrame",   "SampleAndSendFrameSyncData(",                      "LFrameSyncBattleLogic","red",   "C0 03 5F D6",                          ""],
+    // 🟠 BattleStatistic
+    ["bs_isreport",   "Stat.IsNeedReport",            "IsNeedReportCompetitionData()",                    "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
+    ["bs_resetcheet", "Stat.ResetCheet [B HOOK]",     "ResetCheetCommandSetWarmBattleResultInfo()",       "BattleStatistic",    "orange", "F1 7F 04 90  31 E2 02 91  20 02 1F D6","lime"],
+    ["bs_petdata",    "Stat.CreatePetData",           "CreatePetData(uint playerId",                      "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
+    ["bs_dragon",     "Stat.CreateDragonInfo",        "CreateDragonStatistInfo(",                         "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
+    ["bs_shenfu",     "Stat.GeneralShenFu",           "GeneralShenFuData(",                               "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
+    ["bs_verify",     "Stat.VerifyCondition",         "VerifyCondition(IStarCondition",                   "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
+    // 🟠 Apollo
+    ["ap_reportopen", "Apollo.ReportEventOpenApp",    "ReportEventOpenApp(",                              "ApolloEventReport",  "orange", "C0 03 5F D6",                          ""],
+    ["ap_addcache",   "Apollo.AddCacheReport",        "AddCacheReport(string eventName",                  null,                 "orange", "C0 03 5F D6",                          ""],
+    ["ap_onlogin",    "Apollo.OnLogin",               "OnLogin(GCloudChannel platform",                   null,                 "orange", "C0 03 5F D6",                          ""],
+    // 🟠 Firebase
+    ["fb_tryreport",  "Firebase.TryReportInfo",       "public static void TryReportInfo()",               "FirebasePush",       "orange", "C0 03 5F D6",                          ""],
+    ["fb_reportinfo", "Firebase.reportInfo",          "private static void reportInfo()",                 "FirebasePush",       "orange", "C0 03 5F D6",                          ""],
+    ["fb_getpush",    "Firebase.GetPushExtra",        "GetPushExtraDictObjects(",                         "FirebasePush",       "orange", "C0 03 5F D6",                          ""],
+    // 🟠 Lobby
+    ["lb_skipguide",  "Lobby.TrySkipGuideLevel1",     "TrySkipGuideLevel1()",                             "LobbyMsgHandler",    "orange", "C0 03 5F D6",                          ""],
+    ["lb_security",   "Lobby.onTriggerSecurity",      "onTriggerSecurityDataReport(",                     "LobbyMsgHandler",    "orange", "C0 03 5F D6",                          ""],
+    // 🟠 Settlement
+    ["st_cache",      "Settlement.cacheGameInfo",     "public void cacheGameInfoData()",                  "SettlementSystem",   "orange", "C0 03 5F D6",                          ""],
+    ["st_report",     "Settlement.ReportTLog",        "ReportTLogDataToLobby(",                           "SettlementSystem",   "orange", "C0 03 5F D6",                          ""],
+    ["st_matchblack", "Settlement.AddMatchBlack",     "CommonOnRequestAddMatchBlack(",                    "SettlementSystem",   "orange", "C0 03 5F D6",                          ""],
+    // 🟡 CChat
+    ["cc_ntf",        "CChat.OnChatNTFMain",          "CChatNetUT_On_Chat_NTFMainThread(",                null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["cc_compntf",    "CChat.OnComplaintNTF",         "CChatNetUT_On_Chat_Complaint_NTF(",                null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["cc_comprsp",    "CChat.OnComplaintRSP",         "CChatNetUT_On_Chat_Complaint_RSP(",                null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["cc_rspregion",  "CChat.RspSetRegion",           "public static void RspSetChatRegion(",             null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["cc_compntf2",   "CChat.ComplaintNTF (V2)",      "public static void On_Chat_Complaint_NTF(",        null,                 "yellow", "C0 03 5F D6",                          ""],
+    // 🟡 InBattle
+    ["ib_loading",    "InBattle.LoadingChat",         "Send_Loaidng_Chat(",                               null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["ib_translate",  "InBattle.TranslateChat",       "SendInBattleMsg_TranslateChat(",                   null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["ib_preconfig",  "InBattle.PreConfig",           "SendInBattleMsg_PreConfig(",                       null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["ib_inputchat",  "InBattle.InputChat",           "OnSendInBattleMsg_InputChat(",                     null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["ib_complaint",  "InBattle.ChatComplaint",       "SendInBattleMsg_ChatComplaint(ulong id",           null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["hd_likechat1",  "LGameBuilder.Handle_LikeChat", "Handle_SendSendInLoaing_LikeChat(",                "LGameBuilder",       "yellow", "C0 03 5F D6",                          ""],
+    ["hd_comp1",      "LGameBuilder.Handle_Complaint","private void Handle_SendInBattleMsg_ChatComplaint","LGameBuilder",       "yellow", "C0 03 5F D6",                          ""],
+    ["hd_likechat2",  "LStateSync.Handle_LikeChat",   "Handle_SendSendInLoaing_LikeChat(",                "LStateSyncMsgHandler","yellow","C0 03 5F D6",                          ""],
+    ["hd_comp2",      "LStateSync.Handle_Complaint",  "Handle_SendInBattleMsg_ChatComplaint(",            "LStateSyncMsgHandler","yellow","C0 03 5F D6",                          ""],
+    ["gb_chatntf",    "Builder.Handle_ChatNTF",       "private void Handle_On_Chat_NTF(",                 null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["gb_compntf",    "Builder.Handle_ComplaintNTF",  "Handle_On_ChatComplaint_NTF(",                     null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["gb_comprsp",    "Builder.Handle_ComplaintRSP",  "Handle_On_ChatComplaint_RSP(",                     null,                 "yellow", "C0 03 5F D6",                          ""],
+    ["relay_voice",   "Relay.VoiceComplaintRSP",      "On_ChatRealtimeVoice_Complaint_RSP(",              null,                 "yellow", "C0 03 5F D6",                          ""],
+];
+
+const GROUP_META = {
+    red:    "🔴 AnoSDK & FRAME SYNC INTEGRITY",
+    orange: "🟠 STATISTICS & TELEMETRY REPORT",
+    yellow: "🟡 CHAT & COMPLAINT SYSTEM",
+};
+
+// ─── BUILD TABLE ──────────────────────────────────────────────────────────────
+const tbody = document.getElementById('list');
+let lastGrp = '';
+ENTRIES.forEach(([id, name,,,grp, patch, pcolor]) => {
+    if (grp !== lastGrp) {
+        const hdr = document.createElement('tr');
+        hdr.className = `group-header g-${grp}`;
+        hdr.innerHTML = `<td colspan="3">${GROUP_META[grp]}</td>`;
+        tbody.appendChild(hdr);
+        lastGrp = grp;
+    }
+    const tr = document.createElement('tr');
+    tr.id = `row-${id}`;
+    const pstyle = pcolor === 'cyan' ? 'color:var(--cyan)' : pcolor === 'lime' ? 'color:var(--lime)' : 'color:#fff';
+    tr.innerHTML = `
+        <td><span class="method-name">${name}</span></td>
+        <td><div class="rva-cell" id="rva-${id}" onclick="copyRVA(this)">...</div></td>
+        <td><div class="patch-box" style="${pstyle}">${patch}</div></td>`;
+    tbody.appendChild(tr);
+});
+
+// ─── COPY ─────────────────────────────────────────────────────────────────────
+function copyRVA(cell) {
+    if (!cell.classList.contains('found')) return;
+    navigator.clipboard.writeText(cell.innerText).then(() => {
+        const t = document.getElementById("toast");
+        t.className = "show";
+        setTimeout(() => t.className = "", 1800);
     });
 }
 
+// ─── SCANNER ──────────────────────────────────────────────────────────────────
 async function run() {
     const file = document.getElementById('fIn').files[0];
     if (!file) return;
-    document.getElementById('status').innerText = "ĐANG QUÉT: " + file.name.toUpperCase();
-    
-    const rows = Array.from(document.querySelectorAll('#list tr[data-sig]'));
+
+    // reset
+    ENTRIES.forEach(([id]) => {
+        const cell = document.getElementById(`rva-${id}`);
+        cell.innerText = '...';
+        cell.classList.remove('found');
+        document.getElementById(`row-${id}`).classList.remove('updated');
+    });
+    document.getElementById('s-found').innerText = '0';
+    document.getElementById('s-pct').innerText = '0%';
+    document.getElementById('status').innerText = '🔍 ĐANG QUÉT: ' + file.name.toUpperCase();
+
+    const found = {};          // id -> rva string
     const reader = file.stream().getReader();
-    const decoder = new TextDecoder();
-    let partial = '', lastRVA = '';
+    const decoder = new TextDecoder('utf-8');
+    let partial = '';
+    let lastRVA = '';
+    let currentClass = '';
+    let bytesRead = 0;
+    const total = file.size;
 
     while (true) {
-        const {done, value} = await reader.read();
+        const { done, value } = await reader.read();
         if (done) break;
-        const text = partial + decoder.decode(value);
-        const lines = text.split(/\r?\n/);
+        bytesRead += value.byteLength;
+
+        const chunk = partial + decoder.decode(value, { stream: true });
+        const lines = chunk.split(/\r?\n/);
         partial = lines.pop();
 
-        for (const line of lines) {
-            // Regex bốc RVA: Tìm mã Hex sau chữ RVA: 0x
-            const rvaMatch = line.match(/RVA:\s*0x([0-9A-Fa-f]+)/i);
-            if (rvaMatch) { lastRVA = rvaMatch[1].toUpperCase(); }
-            
-            rows.forEach(row => {
-                const sig = row.getAttribute('data-sig');
-                // Tối ưu: Nếu dòng chứa chính xác tên hàm thuần túy
-                const regex = new RegExp("\\b" + sig + "\\b");
-                if (regex.test(line) && lastRVA) {
-                    row.querySelector('.rva-cell').innerText = lastRVA;
-                    row.classList.add('updated');
-                }
-            });
+        for (const raw of lines) {
+            const line = raw.trim();
+            if (!line) continue;
+
+            // track class
+            const cm = line.match(/^(?:public|private|internal|protected|sealed|abstract).*?\bclass\s+(\w+)/);
+            if (cm) { currentClass = cm[1]; continue; }
+
+            // extract RVA comment
+            const rm = line.match(/\/\/\s*RVA:\s*0x([0-9A-Fa-f]+)/i);
+            if (rm) { lastRVA = rm[1].toUpperCase(); continue; }
+
+            // match each entry
+            for (const [id, , sig, reqClass] of ENTRIES) {
+                if (found[id]) continue;                          // đã tìm được rồi
+                if (!line.includes(sig)) continue;               // sig không có trong dòng này
+                if (reqClass && currentClass !== reqClass) continue; // sai class
+                if (!lastRVA) continue;                          // chưa có RVA
+
+                found[id] = lastRVA;
+                const cell = document.getElementById(`rva-${id}`);
+                cell.innerText = lastRVA;
+                cell.classList.add('found');
+                document.getElementById(`row-${id}`).classList.add('updated');
+
+                const cnt = Object.keys(found).length;
+                document.getElementById('s-found').innerText = cnt;
+                document.getElementById('s-pct').innerText = Math.round(cnt / 47 * 100) + '%';
+            }
         }
+
+        // progress
+        const pct = Math.round(bytesRead / total * 100);
+        document.getElementById('progress').innerText =
+            `${pct}%  —  ${(bytesRead/1024/1024).toFixed(1)} / ${(total/1024/1024).toFixed(1)} MB`;
     }
-    document.getElementById('status').innerText = "HOÀN TẤT!";
+
+    const cnt = Object.keys(found).length;
+    document.getElementById('status').innerText = `✅ XONG — TÌM ĐƯỢC ${cnt}/47 RVA`;
+    document.getElementById('progress').innerText = '';
 }
 </script>
+
 </body>
 </html>
