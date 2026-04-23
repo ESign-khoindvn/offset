@@ -14,82 +14,81 @@ body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);mi
 .tab.active{color:var(--primary);border-bottom-color:var(--primary);background:#0a1020}
 .tab-content{display:none;padding:20px;max-width:1300px;margin:auto}
 .tab-content.active{display:block}
-.page-title{text-align:center;padding:20px 0 16px;font-size:20px;letter-spacing:4px;color:var(--primary);text-transform:uppercase}
+.page-title{text-align:center;padding:20px 0 14px;font-size:20px;letter-spacing:4px;color:var(--primary);text-transform:uppercase}
 .page-sub{text-align:center;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:20px}
 .upload-row{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap}
 .drop-zone{flex:1;min-width:200px;background:var(--card);border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
 .drop-zone:hover,.drop-zone.drag{border-color:var(--primary);background:#0d1520}
 .drop-zone.loaded{border-color:var(--green);border-style:solid}
-.drop-zone .dz-icon{font-size:26px;margin-bottom:8px}
-.drop-zone .dz-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.drop-zone .dz-name{font-size:10px;color:var(--green);margin-top:6px;font-family:monospace;word-break:break-all}
-.drop-zone .dz-size{font-size:9px;color:var(--muted);margin-top:2px}
+.dz-icon{font-size:26px;margin-bottom:8px}
+.dz-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.dz-name{font-size:10px;color:var(--green);margin-top:6px;font-family:monospace;word-break:break-all}
+.dz-size{font-size:9px;color:var(--muted);margin-top:2px}
 .drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.btn{display:inline-block;padding:11px 24px;border-radius:8px;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s}
-.btn-primary{background:linear-gradient(135deg,#0080aa,#0050cc);color:#fff;width:100%;display:block;margin-bottom:14px}
+.btn-primary{background:linear-gradient(135deg,#0080aa,#0050cc);color:#fff;width:100%;display:block;padding:13px;border-radius:8px;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;margin-bottom:14px;transition:all 0.2s}
 .btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#00aadd,#0070ff)}
 .btn-primary:disabled{opacity:0.35;cursor:not-allowed}
-.btn-export{background:linear-gradient(135deg,#006633,#009944);color:#fff;padding:11px 20px;border-radius:8px;font-size:11px;font-weight:bold;letter-spacing:2px;cursor:pointer;border:none;display:none}
+.btn-export{background:linear-gradient(135deg,#006633,#009944);color:#fff;padding:10px 18px;border-radius:8px;font-size:11px;font-weight:bold;letter-spacing:2px;cursor:pointer;border:none;display:none;transition:all 0.2s}
 .btn-export:hover{background:linear-gradient(135deg,#008844,#00bb55)}
-.btn-selall{font-size:10px;padding:5px 12px;border-radius:6px;background:#0a1820;border:1px solid var(--border);color:var(--muted);cursor:pointer;letter-spacing:1px}
-.btn-selall:hover{border-color:var(--primary);color:var(--primary)}
+.btn-sel{font-size:10px;padding:5px 12px;border-radius:6px;background:#0a1820;border:1px solid var(--border);color:var(--muted);cursor:pointer}
+.btn-sel:hover{border-color:var(--primary);color:var(--primary)}
 .prog-wrap{margin-bottom:14px;display:none}
 .prog-bg{background:var(--border);border-radius:4px;height:5px;overflow:hidden}
-.prog-fill{height:100%;background:var(--primary);border-radius:4px;transition:width 0.1s;width:0%}
+.prog-fill{height:100%;background:var(--primary);border-radius:4px;transition:width 0.15s;width:0%}
 .prog-txt{font-size:10px;color:var(--muted);margin-top:5px;text-align:center}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;display:none}
+.stats-grid{display:none;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:16px}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center}
 .stat-val{font-size:24px;font-weight:bold;display:block}
 .stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-.tbl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
-.tbl-title{font-size:12px;color:var(--primary);letter-spacing:2px;text-transform:uppercase}
+.toolbar{display:none;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
 .filter-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .fbtn{font-size:9px;padding:4px 10px;border-radius:14px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);text-transform:uppercase;letter-spacing:1px;transition:all 0.15s}
 .fbtn.active,.fbtn:hover{border-color:var(--primary);color:var(--primary)}
-.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:none}
+.tbl-wrap{display:none;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px}
 table{width:100%;border-collapse:collapse;font-size:11px}
 thead th{background:#090d14;color:var(--muted);padding:10px;text-align:left;font-size:9px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;top:42px;z-index:4}
-tbody tr{transition:background 0.1s}
 tbody tr:hover td{background:#0f1820!important}
 tbody tr+tr td{border-top:1px solid #0d1520}
 td{padding:9px 10px;vertical-align:middle}
 .chk{width:16px;height:16px;cursor:pointer;accent-color:var(--primary)}
-.rva-tag{font-family:'Courier New',monospace;font-size:12px;font-weight:bold;color:#fff;background:#0a1825;border:1px solid #1a3040;padding:4px 9px;border-radius:5px;cursor:pointer;display:inline-block;transition:all 0.15s;user-select:none;white-space:nowrap}
-.rva-tag:hover{background:var(--primary);color:#000;border-color:var(--primary)}
-.hex-box{font-family:'Courier New',monospace;font-size:9px;background:#000;padding:4px 8px;border-radius:4px;border:1px solid #1a2030;display:inline-block;white-space:nowrap}
+.rva-btn{font-family:'Courier New',monospace;font-size:12px;font-weight:bold;color:#fff;background:#0a1825;border:1px solid #1a3040;padding:4px 9px;border-radius:5px;cursor:pointer;display:inline-block;transition:all 0.15s;user-select:none}
+.rva-btn:hover{background:var(--primary);color:#000}
+.hbox{font-family:'Courier New',monospace;font-size:9px;background:#000;padding:4px 8px;border-radius:4px;border:1px solid #1a2030;display:inline-block;white-space:nowrap}
 .ho{color:var(--red)}.hp{color:var(--green)}
-.type-badge{font-size:8px;padding:3px 7px;border-radius:9px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.badge{font-size:8px;padding:3px 7px;border-radius:9px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
 .t-ret{background:#200a0a;color:var(--red);border:1px solid #400a0a}
 .t-b{background:#0a1a0a;color:var(--green);border:1px solid #0a2a0a}
 .t-mov0{background:#1a1000;color:var(--orange);border:1px solid #2a1800}
 .t-mov1{background:#100a1a;color:var(--purple);border:1px solid #201030}
 .t-nop{background:#0a0a1a;color:var(--primary);border:1px solid #0a0a2a}
 .t-other{background:#101010;color:var(--muted);border:1px solid #202020}
-.dis-txt{font-size:9px;color:#66ffaa;font-family:monospace}
-.unity-result{display:none}
-.func-card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden}
-.func-head{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background 0.15s}
-.func-head:hover{background:#0f1820}
-.func-rva{font-family:monospace;font-size:12px;font-weight:bold;color:#fff;background:#0a1825;border:1px solid #1a3040;padding:3px 8px;border-radius:4px;cursor:pointer;flex-shrink:0}
-.func-rva:hover{background:var(--primary);color:#000}
-.func-name{font-size:11px;color:#80ffdf;font-weight:bold;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.func-type{flex-shrink:0}
-.func-sig{display:none}
-.func-sig.open{display:block}
-.func-purpose{font-size:10px;color:var(--yellow);padding:4px 14px 10px;display:none;border-top:1px solid var(--border);background:#0d1000}
-.func-purpose.open{display:block}
-.group-block{margin-bottom:18px}
-.group-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px}
+.dis{font-size:9px;color:#66ffaa;font-family:monospace}
+/* Unity */
+.unity-out{display:none}
+.g-block{margin-bottom:16px}
+.g-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:8px;margin-bottom:6px;font-size:11px;font-weight:bold}
 .gh-red{background:#1a0505;border:1px solid #400a0a;color:var(--red)}
 .gh-orange{background:#120a00;border:1px solid #3a2000;color:var(--orange)}
 .gh-yellow{background:#111000;border:1px solid #2a2000;color:var(--yellow)}
 .gh-blue{background:#050a12;border:1px solid #0a1a30;color:var(--primary)}
 .gh-purple{background:#0d0812;border:1px solid #1a1030;color:var(--purple)}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:9px 20px;border-radius:7px;font-weight:bold;font-size:11px;z-index:200;visibility:hidden;white-space:nowrap}
-#toast.show{visibility:visible;animation:tf .2s,to .3s 1.3s forwards}
-@keyframes tf{from{opacity:0;bottom:5px}to{opacity:1;bottom:20px}}
-@keyframes to{to{opacity:0}}
-.empty-state{text-align:center;padding:50px;color:var(--muted);font-size:11px}
+.g-desc{font-size:10px;color:var(--yellow);padding:6px 14px 8px;background:#0d1008;border:1px solid var(--border);border-radius:6px;margin-bottom:6px}
+.f-card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;overflow:hidden}
+.f-head{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;transition:background 0.15s}
+.f-head:hover{background:#0f1820}
+.f-rva{font-family:monospace;font-size:12px;font-weight:bold;color:#fff;background:#0a1825;border:1px solid #1a3040;padding:3px 8px;border-radius:4px;cursor:pointer;flex-shrink:0}
+.f-rva:hover{background:var(--primary);color:#000}
+.f-name{font-size:11px;color:#80ffdf;font-weight:bold;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f-body{display:none;border-top:1px solid var(--border)}
+.f-body.open{display:block}
+.f-sig{padding:8px 14px 4px}
+.f-sig code{font-size:10px;color:#80ccaa}
+.f-hex{display:flex;gap:10px;padding:4px 14px 8px;flex-wrap:wrap}
+.f-purpose{font-size:10px;color:var(--yellow);padding:6px 14px 10px;background:#0d1000;border-top:1px solid var(--border)}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:9px 20px;border-radius:7px;font-weight:bold;font-size:11px;z-index:999;visibility:hidden;white-space:nowrap}
+#toast.show{visibility:visible;animation:tin .2s,tout .3s 1.4s forwards}
+@keyframes tin{from{opacity:0;bottom:5px}to{opacity:1;bottom:20px}}
+@keyframes tout{to{opacity:0}}
 </style>
 </head>
 <body>
@@ -99,55 +98,55 @@ td{padding:9px 10px;vertical-align:middle}
     <div class="tab" onclick="switchTab(1,this)">&#127918; UNITY ANALYZER</div>
 </div>
 
+<!-- TAB 1 -->
+
 <div class="tab-content active" id="tab0">
     <div class="page-title">Binary Diff &amp; Patch</div>
     <div class="page-sub">Mach-O &middot; PE &middot; ARM64 &middot; x86_64</div>
     <div class="upload-row">
         <div class="drop-zone" id="dz1-orig" ondragover="dg(event,'1-orig')" ondragleave="ud('1-orig')" ondrop="dp(event,'1-orig')">
-            <div class="dz-icon">&#128193;</div><div class="dz-label">File GOC</div>
-            <div class="dz-name" id="fn1-orig">Keo tha hoac click</div>
-            <div class="dz-size" id="fs1-orig"></div>
+            <div class="dz-icon">&#128193;</div><div class="dz-label">File GOC (Original)</div>
+            <div class="dz-name" id="fn1-orig">Keo tha hoac click</div><div class="dz-size" id="fs1-orig"></div>
             <input type="file" id="f1-orig" onchange="lf('1-orig')">
         </div>
         <div class="drop-zone" id="dz1-patch" ondragover="dg(event,'1-patch')" ondragleave="ud('1-patch')" ondrop="dp(event,'1-patch')">
             <div class="dz-icon">&#128295;</div><div class="dz-label">File PATCH</div>
-            <div class="dz-name" id="fn1-patch">Keo tha hoac click</div>
-            <div class="dz-size" id="fs1-patch"></div>
+            <div class="dz-name" id="fn1-patch">Keo tha hoac click</div><div class="dz-size" id="fs1-patch"></div>
             <input type="file" id="f1-patch" onchange="lf('1-patch')">
         </div>
     </div>
-    <button class="btn btn-primary" id="btn1-go" disabled onclick="analyze1()">&#128269; PHAN TICH</button>
-    <div class="prog-wrap" id="prog1"><div class="prog-bg"><div class="prog-fill" id="pf1"></div></div><div class="prog-txt" id="pt1">...</div></div>
+    <button class="btn-primary" id="btn1" disabled onclick="run1()">&#128269; PHAN TICH</button>
+    <div class="prog-wrap" id="pw1"><div class="prog-bg"><div class="prog-fill" id="pf1"></div></div><div class="prog-txt" id="pt1"></div></div>
     <div class="stats-grid" id="sg1">
-        <div class="stat-card"><span class="stat-val" style="color:var(--primary)" id="s1-tot">0</span><div class="stat-lbl">Tong patch</div></div>
-        <div class="stat-card"><span class="stat-val" style="color:var(--red)" id="s1-ret">0</span><div class="stat-lbl">RET killed</div></div>
-        <div class="stat-card"><span class="stat-val" style="color:var(--green)" id="s1-b">0</span><div class="stat-lbl">B Hook</div></div>
-        <div class="stat-card"><span class="stat-val" style="color:var(--orange)" id="s1-m0">0</span><div class="stat-lbl">MOV #0</div></div>
-        <div class="stat-card"><span class="stat-val" style="color:var(--purple)" id="s1-m1">0</span><div class="stat-lbl">MOV #1</div></div>
-        <div class="stat-card"><span class="stat-val" style="color:var(--primary)" id="s1-nop">0</span><div class="stat-lbl">NOP</div></div>
-        <div class="stat-card"><span class="stat-val" style="color:var(--muted)" id="s1-sz">-</span><div class="stat-lbl">Size diff</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--primary)" id="s1t">0</span><div class="stat-lbl">Tong</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--red)" id="s1r">0</span><div class="stat-lbl">RET</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--green)" id="s1b">0</span><div class="stat-lbl">B Hook</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--orange)" id="s1m0">0</span><div class="stat-lbl">MOV#0</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--purple)" id="s1m1">0</span><div class="stat-lbl">MOV#1</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--primary)" id="s1n">0</span><div class="stat-lbl">NOP</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--muted)" id="s1sz">-</span><div class="stat-lbl">Size diff</div></div>
     </div>
-    <div class="tbl-header" style="display:none" id="tbl1-hdr">
-        <div class="tbl-title" id="tbl1-title">PATCH LIST</div>
+    <div class="toolbar" id="tb1-bar">
+        <span style="font-size:12px;color:var(--primary);letter-spacing:2px" id="tb1-title">PATCH LIST</span>
         <div class="filter-row">
-            <button class="btn-selall" onclick="selAll1(true)">&#9745; ALL</button>
-            <button class="btn-selall" onclick="selAll1(false)">&#9744; NONE</button>
+            <button class="btn-sel" onclick="sa1(true)">&#9745; ALL</button>
+            <button class="btn-sel" onclick="sa1(false)">&#9744; NONE</button>
             &nbsp;
-            <div class="fbtn active" onclick="filt1('all',this)">ALL</div>
-            <div class="fbtn" onclick="filt1('ret',this)">RET</div>
-            <div class="fbtn" onclick="filt1('b',this)">B HOOK</div>
-            <div class="fbtn" onclick="filt1('mov0',this)">MOV#0</div>
-            <div class="fbtn" onclick="filt1('mov1',this)">MOV#1</div>
-            <div class="fbtn" onclick="filt1('nop',this)">NOP</div>
-            <div class="fbtn" onclick="filt1('other',this)">OTHER</div>
+            <div class="fbtn active" onclick="f1('all',this)">ALL</div>
+            <div class="fbtn" onclick="f1('ret',this)">RET</div>
+            <div class="fbtn" onclick="f1('b',this)">B HOOK</div>
+            <div class="fbtn" onclick="f1('mov0',this)">MOV#0</div>
+            <div class="fbtn" onclick="f1('mov1',this)">MOV#1</div>
+            <div class="fbtn" onclick="f1('nop',this)">NOP</div>
+            <div class="fbtn" onclick="f1('other',this)">OTHER</div>
             &nbsp;
-            <button class="btn-export" id="btn-export" onclick="exportPatched()">&#128190; EXPORT PATCHED FILE</button>
+            <button class="btn-export" id="btn1-exp" onclick="exp1()">&#128190; EXPORT PATCHED</button>
         </div>
     </div>
-    <div class="tbl-wrap" id="tbl1-wrap">
+    <div class="tbl-wrap" id="tw1">
         <table>
             <thead><tr>
-                <th style="width:36px"><input type="checkbox" class="chk" id="chk-master" onchange="masterChk(this)"></th>
+                <th style="width:34px"><input type="checkbox" class="chk" id="chkM" onchange="sa1(this.checked)"></th>
                 <th>#</th><th>RVA</th><th>TYPE</th><th>SIZE</th><th>ORIGINAL</th><th>PATCHED</th><th>DISASM</th>
             </tr></thead>
             <tbody id="tb1"></tbody>
@@ -155,515 +154,548 @@ td{padding:9px 10px;vertical-align:middle}
     </div>
 </div>
 
+<!-- TAB 2 -->
+
 <div class="tab-content" id="tab1">
     <div class="page-title">Unity IL2CPP Analyzer</div>
-    <div class="page-sub">Binary diff + dump.cs lookup + phan tich cong dung</div>
+    <div class="page-sub">Binary diff + dump.cs + phan tich cong dung</div>
     <div class="upload-row">
         <div class="drop-zone" id="dz2-orig" ondragover="dg(event,'2-orig')" ondragleave="ud('2-orig')" ondrop="dp(event,'2-orig')">
             <div class="dz-icon">&#128193;</div><div class="dz-label">UnityFramework GOC</div>
-            <div class="dz-name" id="fn2-orig">Keo tha hoac click</div>
-            <div class="dz-size" id="fs2-orig"></div>
+            <div class="dz-name" id="fn2-orig">Keo tha hoac click</div><div class="dz-size" id="fs2-orig"></div>
             <input type="file" id="f2-orig" onchange="lf('2-orig')">
         </div>
         <div class="drop-zone" id="dz2-patch" ondragover="dg(event,'2-patch')" ondragleave="ud('2-patch')" ondrop="dp(event,'2-patch')">
             <div class="dz-icon">&#128295;</div><div class="dz-label">UnityFramework PATCH</div>
-            <div class="dz-name" id="fn2-patch">Keo tha hoac click</div>
-            <div class="dz-size" id="fs2-patch"></div>
+            <div class="dz-name" id="fn2-patch">Keo tha hoac click</div><div class="dz-size" id="fs2-patch"></div>
             <input type="file" id="f2-patch" onchange="lf('2-patch')">
         </div>
         <div class="drop-zone" id="dz2-dump" ondragover="dg(event,'2-dump')" ondragleave="ud('2-dump')" ondrop="dp(event,'2-dump')">
             <div class="dz-icon">&#128196;</div><div class="dz-label">dump.cs</div>
-            <div class="dz-name" id="fn2-dump">Keo tha hoac click</div>
-            <div class="dz-size" id="fs2-dump"></div>
+            <div class="dz-name" id="fn2-dump">Keo tha hoac click</div><div class="dz-size" id="fs2-dump"></div>
             <input type="file" id="f2-dump" accept=".cs,.txt" onchange="lf('2-dump')">
         </div>
     </div>
-    <button class="btn btn-primary" id="btn2-go" disabled onclick="analyze2()">&#128269; PHAN TICH UNITY</button>
-    <div class="prog-wrap" id="prog2"><div class="prog-bg"><div class="prog-fill" id="pf2"></div></div><div class="prog-txt" id="pt2">...</div></div>
-    <div class="unity-result" id="unity-result"></div>
+    <button class="btn-primary" id="btn2" disabled onclick="run2()">&#128269; PHAN TICH UNITY</button>
+    <div class="prog-wrap" id="pw2"><div class="prog-bg"><div class="prog-fill" id="pf2"></div></div><div class="prog-txt" id="pt2"></div></div>
+    <div class="unity-out" id="uout"></div>
 </div>
 
 <script>
-const FILES={};
-let rows1=[],rows2=[];
+'use strict';
+// ── STATE ─────────────────────────────────────────────────────
+const F={};       // uploaded files
+let R1=[];        // Tab1 diff rows
+let R2=[];        // Tab2 diff rows
 
-function switchTab(i,el){
-    document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
-    document.querySelectorAll('.tab-content').forEach((c,j)=>c.classList.toggle('active',j===i));
-}
-function lf(key){
-    const f=document.getElementById('f'+key).files[0];
+// ── FILE HANDLING ─────────────────────────────────────────────
+function lf(k){
+    const f=document.getElementById('f'+k).files[0];
     if(!f)return;
-    FILES[key]=f;
-    document.getElementById('fn'+key).innerText=f.name;
-    document.getElementById('fs'+key).innerText=fmtSz(f.size);
-    document.getElementById('dz'+key).classList.add('loaded');
-    updateBtns();
+    F[k]=f;
+    document.getElementById('fn'+k).innerText=f.name;
+    document.getElementById('fs'+k).innerText=fsz(f.size);
+    document.getElementById('dz'+k).classList.add('loaded');
+    chkBtns();
 }
 function dg(e,k){e.preventDefault();document.getElementById('dz'+k).classList.add('drag')}
 function ud(k){document.getElementById('dz'+k).classList.remove('drag')}
 function dp(e,k){
     e.preventDefault();ud(k);
     const f=e.dataTransfer.files[0];if(!f)return;
-    FILES[k]=f;
+    F[k]=f;
     document.getElementById('fn'+k).innerText=f.name;
-    document.getElementById('fs'+k).innerText=fmtSz(f.size);
+    document.getElementById('fs'+k).innerText=fsz(f.size);
     document.getElementById('dz'+k).classList.add('loaded');
-    updateBtns();
+    chkBtns();
 }
-function updateBtns(){
-    document.getElementById('btn1-go').disabled=!(FILES['1-orig']&&FILES['1-patch']);
-    document.getElementById('btn2-go').disabled=!(FILES['2-orig']&&FILES['2-patch']&&FILES['2-dump']);
+function chkBtns(){
+    document.getElementById('btn1').disabled=!(F['1-orig']&&F['1-patch']);
+    document.getElementById('btn2').disabled=!(F['2-orig']&&F['2-patch']&&F['2-dump']);
 }
-function fmtSz(n){return n>1048576?(n/1048576).toFixed(1)+' MB':(n/1024).toFixed(1)+' KB'}
-function readBuf(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.onerror=j;rd.readAsArrayBuffer(f)})}
+function fsz(n){return n>1048576?(n/1048576).toFixed(1)+' MB':(n/1024).toFixed(1)+' KB'}
+function rbuf(f){return new Promise((r,j)=>{const x=new FileReader();x.onload=e=>r(e.target.result);x.onerror=j;x.readAsArrayBuffer(f)})}
 function tick(){return new Promise(r=>setTimeout(r,0))}
-function setP(id,pct,txt){document.getElementById('pf'+id).style.width=pct+'%';document.getElementById('pt'+id).innerText=txt}
-function copyTxt(txt){
-    navigator.clipboard.writeText(txt).then(()=>{
-        const t=document.getElementById('toast');t.className='show';setTimeout(()=>t.className='',1700);
-    });
+function sp(id,p,t){document.getElementById('pf'+id).style.width=p+'%';document.getElementById('pt'+id).innerText=t}
+function cp(txt){navigator.clipboard.writeText(txt).then(()=>{const t=document.getElementById('toast');t.className='show';setTimeout(()=>t.className='',1800)})}
+function switchTab(i,el){
+    document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+    document.querySelectorAll('.tab-content').forEach((c,j)=>c.classList.toggle('active',j===i));
 }
 
-function getMachoRange(arr){
+// ── MACH-O ────────────────────────────────────────────────────
+function machoRange(arr){
     const dv=new DataView(arr.buffer);
-    if(dv.getUint32(0,true)!==0xFEEDFACF)return{start:0x4000,end:arr.length};
-    const ncmds=dv.getUint32(16,true);
-    let off=32,ts=0x4000,be=arr.length;
-    const KNOWN=['__TEXT','__DATA','__DATA_CONST','__DATA_DIRTY','__OBJC','__AUTH','__AUTH_CONST',''];
-    for(let i=0;i<ncmds;i++){
-        const cmd=dv.getUint32(off,true),csz=dv.getUint32(off+4,true);
+    if(dv.getUint32(0,true)!==0xFEEDFACF)return{s:0x4000,e:arr.length};
+    const nc=dv.getUint32(16,true);
+    let o=32,ts=0x4000,be=arr.length;
+    const KN=['__TEXT','__DATA','__DATA_CONST','__DATA_DIRTY','__OBJC','__AUTH','__AUTH_CONST',''];
+    for(let i=0;i<nc;i++){
+        const cmd=dv.getUint32(o,true),cs=dv.getUint32(o+4,true);
         if(cmd===0x19){
-            const sn=gstr(arr,off+8,16);
-            const fo=Number(dv.getBigUint64(off+40,true));
+            const sn=gs(arr,o+8,16);
+            const fo=Number(dv.getBigUint64(o+40,true));
             if(sn==='__TEXT'){
-                const ns=dv.getUint32(off+56,true);
-                for(let s=0;s<ns;s++){const sb=off+72+s*80;if(gstr(arr,sb,16)==='__text')ts=dv.getUint32(sb+48,true);}
+                const ns=dv.getUint32(o+56,true);
+                for(let s=0;s<ns;s++){if(gs(arr,o+72+s*80,16)==='__text')ts=dv.getUint32(o+72+s*80+48,true)}
             }
-            if(!KNOWN.includes(sn)&&fo>0&&fo<be)be=fo;
+            if(!KN.includes(sn)&&fo>0&&fo<be)be=fo;
         }
-        off+=csz;
+        o+=cs;
     }
-    return{start:ts,end:Math.min(be,arr.length)};
+    return{s:ts,e:Math.min(be,arr.length)};
 }
-function gstr(arr,off,len){let s='';for(let i=0;i<len;i++){if(arr[off+i]===0)break;s+=String.fromCharCode(arr[off+i])}return s}
+function gs(arr,o,l){let s='';for(let i=0;i<l;i++){if(!arr[o+i])break;s+=String.fromCharCode(arr[o+i])}return s}
 
-async function diffFiles(oa,pa,start,end,onP){
-    const CHUNK=2*1024*1024;
-    end=Math.min(end,oa.length,pa.length);
-    const diffs=[];
-    for(let pos=start;pos<end;){
-        const ce=Math.min(pos+CHUNK,end);let i=pos;
+// ── DIFF ENGINE ───────────────────────────────────────────────
+async function diff(oa,pa,s,e,cb){
+    const CK=2097152; // 2MB
+    e=Math.min(e,oa.length,pa.length);
+    const D=[];
+    for(let p=s;p<e;){
+        const ce=Math.min(p+CK,e);let i=p;
         while(i<ce){
             if(oa[i]!==pa[i]){
-                const s=i,ob=[],nb=[];
+                const st=i,ob=[],nb=[];
                 while(i<ce&&oa[i]!==pa[i]){ob.push(oa[i]);nb.push(pa[i]);i++}
                 const o=new Uint8Array(ob),n=new Uint8Array(nb);
-                if(diffs.length&&s===diffs[diffs.length-1].rva+diffs[diffs.length-1].orig.length){
-                    const l=diffs[diffs.length-1];
+                if(D.length&&st===D[D.length-1].rva+D[D.length-1].orig.length){
+                    const l=D[D.length-1];
                     const co=new Uint8Array(l.orig.length+o.length);co.set(l.orig);co.set(o,l.orig.length);l.orig=co;
                     const cn=new Uint8Array(l.patch.length+n.length);cn.set(l.patch);cn.set(n,l.patch.length);l.patch=cn;
-                }else diffs.push({rva:s,orig:o,patch:n});
+                }else D.push({rva:st,orig:o,patch:n});
             }else i++;
         }
-        pos=ce;onP((pos-start)/(end-start));await tick();
+        p=ce;cb((p-s)/(e-s));await tick();
     }
-    return diffs;
+    // Merge regions cach nhau <= 3 bytes (chunk boundary artifact)
+    const M=[];
+    for(const d of D){
+        if(M.length){
+            const prev=M[M.length-1];
+            const gap=d.rva-(prev.rva+prev.orig.length);
+            if(gap>=0&&gap<=3){
+                // Fill gap bang bytes goc (khong thay doi)
+                const go=oa.slice(prev.rva+prev.orig.length, d.rva);
+                const gp=pa.slice(prev.rva+prev.patch.length, d.rva);
+                const co=new Uint8Array(prev.orig.length+go.length+d.orig.length);
+                co.set(prev.orig);co.set(go,prev.orig.length);co.set(d.orig,prev.orig.length+go.length);
+                prev.orig=co;
+                const cn=new Uint8Array(prev.patch.length+gp.length+d.patch.length);
+                cn.set(prev.patch);cn.set(gp,prev.patch.length);cn.set(d.patch,prev.patch.length+gp.length);
+                prev.patch=cn;
+                continue;
+            }
+        }
+        M.push({rva:d.rva,orig:new Uint8Array(d.orig),patch:new Uint8Array(d.patch)});
+    }
+    return M;
 }
 
-const RET=[0xC0,0x03,0x5F,0xD6],NOP=[0x1F,0x20,0x03,0xD5];
-const MW00=[0x00,0x00,0x80,0x52],MW01=[0x20,0x00,0x80,0x52];
-const MX00=[0x00,0x00,0x80,0xD2],MX01=[0x20,0x00,0x80,0xD2];
-const eq4=(a,p)=>a.length>=4&&a[0]===p[0]&&a[1]===p[1]&&a[2]===p[2]&&a[3]===p[3];
+// ── CLASSIFY ──────────────────────────────────────────────────
+const RET=[0xC0,0x03,0x5F,0xD6];
+const NOP=[0x1F,0x20,0x03,0xD5];
+// D5 placeholder (MSR — crash nếu không có runtime patcher)
+const RET_D5=[0xC0,0x03,0x5F,0xD5];
+const MW0=[0x00,0x00,0x80,0x52],MW1=[0x20,0x00,0x80,0x52];
+const MX0=[0x00,0x00,0x80,0xD2],MX1=[0x20,0x00,0x80,0xD2];
+const e4=(a,p)=>a.length>=4&&a[0]===p[0]&&a[1]===p[1]&&a[2]===p[2]&&a[3]===p[3];
 const sw=(a,p)=>{for(let i=0;i<p.length;i++)if(a[i]!==p[i])return false;return true};
 
-function classify(d){
+function cls(d){
     const p=d.patch;
-    let type='other',lbl='OTHER',cls='t-other',dis='';
-    if(eq4(p,RET)){type='ret';lbl='RET';cls='t-ret';dis='ret'}
-    else if(eq4(p,NOP)){type='nop';lbl='NOP';cls='t-nop';dis='nop'}
-    else if(p.length>=8&&sw(p,MW00)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3]){type='mov0';lbl='MOV w0,#0';cls='t-mov0';dis='mov w0,#0/ret'}
-    else if(p.length>=8&&sw(p,MX00)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3]){type='mov0';lbl='MOV x0,#0';cls='t-mov0';dis='mov x0,#0/ret'}
-    else if(p.length>=8&&sw(p,MW01)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3]){type='mov1';lbl='MOV w0,#1';cls='t-mov1';dis='mov w0,#1/ret'}
-    else if(p.length>=8&&sw(p,MX01)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3]){type='mov1';lbl='MOV x0,#1';cls='t-mov1';dis='mov x0,#1/ret'}
+    let type='other',lbl='OTHER',c='t-other',dis='';
+    if(e4(p,RET)){type='ret';lbl='RET';c='t-ret';dis='ret'}
+    // D5 — classify as ret* với note cần fix
+    else if(e4(p,RET_D5)){type='ret';lbl='RET*';c='t-ret';dis='ret (D5->D6 auto-fixed)'}
+    else if(e4(p,NOP)){type='nop';lbl='NOP';c='t-nop';dis='nop'}
+    else if(p.length>=8&&sw(p,MW0)&&p[4]===0xC0&&p[5]===0x03&&p[6]===0x5F&&p[7]===0xD6){type='mov0';lbl='MOV w0,#0';c='t-mov0';dis='mov w0,#0/ret'}
+    else if(p.length>=8&&sw(p,MX0)&&p[4]===0xC0&&p[5]===0x03&&p[6]===0x5F&&p[7]===0xD6){type='mov0';lbl='MOV x0,#0';c='t-mov0';dis='mov x0,#0/ret'}
+    else if(p.length>=8&&sw(p,MW1)&&p[4]===0xC0&&p[5]===0x03&&p[6]===0x5F&&p[7]===0xD6){type='mov1';lbl='MOV w0,#1';c='t-mov1';dis='mov w0,#1/ret'}
+    else if(p.length>=8&&sw(p,MX1)&&p[4]===0xC0&&p[5]===0x03&&p[6]===0x5F&&p[7]===0xD6){type='mov1';lbl='MOV x0,#1';c='t-mov1';dis='mov x0,#1/ret'}
     else if(p.length===4){
         const v=(p[3]<<24|p[2]<<16|p[1]<<8|p[0])>>>0;
         if((v&0xFC000000)===0x14000000){
             let im=v&0x3FFFFFF;if(im&0x2000000)im-=0x4000000;
-            const tgt=(d.rva+im*4)>>>0;
-            type='b';lbl='B HOOK';cls='t-b';dis='b 0x'+tgt.toString(16).toUpperCase().padStart(8,'0');
+            type='b';lbl='B HOOK';c='t-b';dis='b 0x'+((d.rva+im*4)>>>0).toString(16).toUpperCase().padStart(8,'0');
         }
     }else if(p.length>=12){
         const v0=(p[3]<<24|p[2]<<16|p[1]<<8|p[0])>>>0;
-        if((v0&0x9F000000)===0x90000000||(v0&0x9F000000)===0xB0000000||(v0&0x9F000000)===0xD0000000){type='b';lbl='TRAMPOLINE';cls='t-b';dis='adrp/add/br'}
+        if((v0&0x9F000000)===0x90000000||(v0&0x9F000000)===0xB0000000||(v0&0x9F000000)===0xD0000000){type='b';lbl='TRAMPOLINE';c='t-b';dis='adrp/add/br'}
     }
-    // Classify D5 as OTHER with note
-    if(type==='other'&&p.length>=4&&p[0]===0xC0&&p[1]===0x03&&p[2]===0x5F&&p[3]===0xD5){
-        lbl='RET*';cls='t-ret';dis='ret (D5 fixed->D6)';
-    }
-    return{...d,type,lbl,cls,dis};
+    return{...d,type,lbl,c,dis};
 }
 
-function toHex(arr,mx){
+function h(arr,mx){
     const a=Array.from(arr).slice(0,mx).map(b=>b.toString(16).toUpperCase().padStart(2,'0')).join(' ');
     return arr.length>mx?a+'...':a;
 }
 
-// TAB 1
-async function analyze1(){
-    document.getElementById('btn1-go').disabled=true;
-    document.getElementById('prog1').style.display='block';
-    document.getElementById('sg1').style.display='none';
-    document.getElementById('tbl1-wrap').style.display='none';
-    document.getElementById('tbl1-hdr').style.display='none';
-    document.getElementById('btn-export').style.display='none';
-    rows1=[];
-    setP(1,0,'Doc file...');
-    const ob=await readBuf(FILES['1-orig']);
-    setP(1,25,'Doc patch...');
-    const pb=await readBuf(FILES['1-patch']);
+// ── PATCH BYTES — FIX D5->D6 KHI GHI ────────────────────────
+// C0 03 5F D5 = MSR SPSEL,#0 (privileged, crash user mode)
+// C0 03 5F D6 = RET (dung)
+// Khi export: neu phat hien D5 thi tu dong doi thanh D6
+function fixedPatchBytes(patchBytes){
+    const out=new Uint8Array(patchBytes);
+    for(let i=0;i<=out.length-4;i++){
+        if(out[i]===0xC0&&out[i+1]===0x03&&out[i+2]===0x5F&&out[i+3]===0xD5){
+            out[i+3]=0xD6; // D5->D6
+        }
+    }
+    return out;
+}
+
+// ── TAB 1 ─────────────────────────────────────────────────────
+async function run1(){
+    document.getElementById('btn1').disabled=true;
+    ['pw1','sg1','tb1-bar','tw1'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el){el.style.display='none'}
+    });
+    document.getElementById('pw1').style.display='block';
+    R1=[];
+    sp(1,0,'Doc file...');
+    const ob=await rbuf(F['1-orig']);
+    sp(1,20,'Doc patch...');
+    const pb=await rbuf(F['1-patch']);
     const oa=new Uint8Array(ob),pa=new Uint8Array(pb);
-    setP(1,40,'Phan tich header...');
-    const{start,end}=getMachoRange(oa);
-    setP(1,45,'Scan: 0x'+start.toString(16).toUpperCase()+' -> 0x'+end.toString(16).toUpperCase());
-    const diffs=await diffFiles(oa,pa,start,end,p=>setP(1,45+Math.round(p*45),'Diff... '+Math.round(p*100)+'%'));
-    rows1=diffs.map(classify);
-    setP(1,100,'Xong!');
-    setTimeout(()=>{
-        document.getElementById('prog1').style.display='none';
-        renderStats1(oa.length,pa.length);
-        renderTable1();
-        document.getElementById('btn1-go').disabled=false;
-    },250);
+    sp(1,35,'Phan tich...');
+    const{s,e}=machoRange(oa);
+    const D=await diff(oa,pa,s,e,p=>sp(1,35+Math.round(p*55),'Diff '+Math.round(p*100)+'%'));
+    R1=D.map(cls);
+    document.getElementById('pw1').style.display='none';
+    renderStats1(oa.length,pa.length);
+    renderTable1();
+    document.getElementById('btn1').disabled=false;
 }
 
 function renderStats1(os,ps){
-    const c=t=>rows1.filter(r=>r.type===t).length;
-    document.getElementById('s1-tot').innerText=rows1.length;
-    document.getElementById('s1-ret').innerText=c('ret');
-    document.getElementById('s1-b').innerText=c('b');
-    document.getElementById('s1-m0').innerText=c('mov0');
-    document.getElementById('s1-m1').innerText=c('mov1');
-    document.getElementById('s1-nop').innerText=c('nop');
+    const c=t=>R1.filter(r=>r.type===t).length;
+    document.getElementById('s1t').innerText=R1.length;
+    document.getElementById('s1r').innerText=c('ret');
+    document.getElementById('s1b').innerText=c('b');
+    document.getElementById('s1m0').innerText=c('mov0');
+    document.getElementById('s1m1').innerText=c('mov1');
+    document.getElementById('s1n').innerText=c('nop');
     const d=ps-os;
-    document.getElementById('s1-sz').innerText=(d>=0?'+':'')+fmtSz(Math.abs(d));
+    document.getElementById('s1sz').innerText=(d>=0?'+':'')+fsz(Math.abs(d));
     document.getElementById('sg1').style.display='grid';
 }
 
 function renderTable1(){
     const tb=document.getElementById('tb1');
-    document.getElementById('tbl1-title').innerText='PATCH LIST - '+rows1.length+' LOCATION';
-    if(!rows1.length){tb.innerHTML='<tr><td colspan="8"><div class="empty-state">Khong tim thay diff</div></td></tr>';return}
-    const f=document.createDocumentFragment();
-    rows1.forEach((r,i)=>{
+    document.getElementById('tb1-title').innerText='PATCH LIST - '+R1.length+' RVA';
+    if(!R1.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">Khong tim thay diff</td></tr>';return}
+    const frag=document.createDocumentFragment();
+    R1.forEach((r,i)=>{
         const tr=document.createElement('tr');
         tr.dataset.type=r.type;
         const rv=r.rva.toString(16).toUpperCase().padStart(8,'0');
-        tr.innerHTML='<td><input type="checkbox" class="chk row-chk" checked onchange="updateExportBtn()"></td>'
+        // Hien thi patched bytes sau khi fix D5->D6
+        const fixedP=fixedPatchBytes(r.patch);
+        tr.innerHTML='<td><input type="checkbox" class="chk r1chk" checked></td>'
             +'<td style="color:var(--muted);font-size:9px">'+(i+1)+'</td>'
-            +'<td><div class="rva-tag" onclick="copyTxt(\''+rv+'\')">'+rv+'</div></td>'
-            +'<td><span class="type-badge '+r.cls+'">'+r.lbl+'</span></td>'
+            +'<td><span class="rva-btn" onclick="cp(\''+rv+'\')">'+rv+'</span></td>'
+            +'<td><span class="badge '+r.c+'">'+r.lbl+'</span></td>'
             +'<td style="color:var(--muted);font-size:9px">'+r.orig.length+'B</td>'
-            +'<td><div class="hex-box ho">'+toHex(r.orig,10)+'</div></td>'
-            +'<td><div class="hex-box hp">'+toHex(r.patch,10)+'</div></td>'
-            +'<td><span class="dis-txt">'+(r.dis||toHex(r.patch,6))+'</span></td>';
-        f.appendChild(tr);
+            +'<td><span class="hbox ho">'+h(r.orig,10)+'</span></td>'
+            +'<td><span class="hbox hp">'+h(fixedP,10)+'</span></td>'
+            +'<td><span class="dis">'+r.dis+'</span></td>';
+        frag.appendChild(tr);
     });
-    tb.innerHTML='';tb.appendChild(f);
-    document.getElementById('tbl1-wrap').style.display='block';
-    document.getElementById('tbl1-hdr').style.display='flex';
-    document.getElementById('btn-export').style.display='inline-block';
-    updateExportBtn();
+    tb.innerHTML='';tb.appendChild(frag);
+    document.getElementById('tb1-bar').style.display='flex';
+    document.getElementById('tw1').style.display='block';
+    document.getElementById('btn1-exp').style.display='inline-block';
+    updExp1();
 }
 
-function filt1(type,btn){
+function f1(type,btn){
     document.querySelectorAll('#tab0 .fbtn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('#tb1 tr[data-type]').forEach(tr=>{
         tr.style.display=(type==='all'||tr.dataset.type===type)?'':'none';
     });
 }
-function selAll1(v){document.querySelectorAll('.row-chk').forEach(c=>{if(c.closest('tr').style.display!=='none')c.checked=v});updateExportBtn()}
-function masterChk(el){selAll1(el.checked)}
-function updateExportBtn(){
-    const n=document.querySelectorAll('.row-chk:checked').length;
-    document.getElementById('btn-export').innerText='EXPORT ('+n+' patch)';
+function sa1(v){document.querySelectorAll('.r1chk').forEach(c=>{if(c.closest('tr').style.display!=='none')c.checked=v});updExp1()}
+function updExp1(){
+    const n=document.querySelectorAll('.r1chk:checked').length;
+    document.getElementById('btn1-exp').innerText='EXPORT ('+n+' patch)';
 }
 
-async function exportPatched(){
-    const origBuf=await readBuf(FILES['1-orig']);
-    const patchBuf=await readBuf(FILES['1-patch']);
-    const origArr=new Uint8Array(origBuf);
-    const patchArr=new Uint8Array(patchBuf);
-    const out=new Uint8Array(origArr.slice(0));
-    const checks=document.querySelectorAll('.row-chk');
-    let applied=0;
-    checks.forEach((chk,i)=>{
+async function exp1(){
+    const ob=await rbuf(F['1-orig']);
+    const out=new Uint8Array(ob.slice(0));
+    document.querySelectorAll('.r1chk').forEach((chk,i)=>{
         if(!chk.checked)return;
-        const r=rows1[i];if(!r)return;
-        for(let j=0;j<r.patch.length;j++){
-            let b=r.patch[j];
-            
-            out[r.rva+j]=b;
-        }
-        applied++;
+        const r=R1[i];if(!r)return;
+        const fixed=fixedPatchBytes(r.patch);
+        out.set(fixed,r.rva);
     });
-    const blob=new Blob([out],{type:'application/octet-stream'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=(FILES['1-orig'].name||'file').replace(/\.([^.]+)$/,'_patched.$1');
-    a.click();URL.revokeObjectURL(url);
-    const t=document.getElementById('toast');
-    t.innerText='EXPORTED '+applied+' PATCHES';t.className='show';
-    setTimeout(()=>{t.innerText='COPIED';t.className=''},2500);
+    dl(out,(F['1-orig'].name||'file').replace(/\.([^.]+)$/,'_patched.$1'));
 }
 
-// TAB 2
-async function analyze2(){
-    document.getElementById('btn2-go').disabled=true;
-    document.getElementById('prog2').style.display='block';
-    document.getElementById('unity-result').style.display='none';
-    document.getElementById('unity-result').innerHTML='';
-    setP(2,0,'Doc file goc...');
-    const ob=await readBuf(FILES['2-orig']);
-    setP(2,12,'Doc file patch...');
-    const pb=await readBuf(FILES['2-patch']);
+// ── TAB 2 ─────────────────────────────────────────────────────
+async function run2(){
+    document.getElementById('btn2').disabled=true;
+    document.getElementById('pw2').style.display='block';
+    document.getElementById('uout').style.display='none';
+    document.getElementById('uout').innerHTML='';
+    R2=[];
+    sp(2,0,'Doc file goc...');
+    const ob=await rbuf(F['2-orig']);
+    sp(2,10,'Doc patch...');
+    const pb=await rbuf(F['2-patch']);
     const oa=new Uint8Array(ob),pa=new Uint8Array(pb);
-    setP(2,22,'Diff binary...');
-    const{start,end}=getMachoRange(oa);
-    const diffs=await diffFiles(oa,pa,start,end,p=>setP(2,22+Math.round(p*30),'Diff... '+Math.round(p*100)+'%'));
-    const rows=diffs.map(classify);
-    rows2=rows;
-    setP(2,53,'Parse dump.cs...');
+    sp(2,20,'Diff...');
+    const{s,e}=machoRange(oa);
+    const D=await diff(oa,pa,s,e,p=>sp(2,20+Math.round(p*28),'Diff '+Math.round(p*100)+'%'));
+    R2=D.map(cls);
+    sp(2,50,'Parse dump.cs...');
     await tick();
-    const rvaMap=await parseDumpStream(FILES['2-dump'],rows.map(r=>r.rva),p=>setP(2,53+Math.round(p*38),'Parse dump... '+Math.round(p*100)+'%'));
-    setP(2,92,'Render...');
-    await tick();
-    await renderUnity(rows,rvaMap,oa.length,pa.length);
-    document.getElementById('prog2').style.display='none';
-    document.getElementById('unity-result').style.display='block';
-    document.getElementById('btn2-go').disabled=false;
+    const rmap=await parseDump(F['2-dump'],R2.map(r=>r.rva),p=>sp(2,50+Math.round(p*40),'Parse '+Math.round(p*100)+'%'));
+    sp(2,91,'Render...');await tick();
+    await renderUnity(R2,rmap,oa.length,pa.length);
+    document.getElementById('pw2').style.display='none';
+    document.getElementById('uout').style.display='block';
+    document.getElementById('btn2').disabled=false;
 }
 
-async function parseDumpStream(file,rvaList,onP){
-    const targetSet=new Set(rvaList);
-    const result={};
-    const reader=file.stream().getReader();
-    const decoder=new TextDecoder('utf-8');
-    let partial='',curClass='Unknown',lastRVA=null,bytesRead=0;
-    const total=file.size;
+async function parseDump(file,rvaList,cb){
+    const tgt=new Set(rvaList),res={};
+    const rdr=file.stream().getReader(),dec=new TextDecoder();
+    let part='',curCls='Unknown',lastRVA=null,br=0;
+    const tot=file.size;
     while(true){
-        const{done,value}=await reader.read();
-        if(done)break;
-        bytesRead+=value.byteLength;
-        const text=partial+decoder.decode(value,{stream:true});
-        const lines=text.split('\n');
-        partial=lines.pop();
+        const{done,value}=await rdr.read();if(done)break;
+        br+=value.byteLength;
+        const txt=part+dec.decode(value,{stream:true});
+        const lines=txt.split('\n');part=lines.pop();
         for(const raw of lines){
-            const line=raw.trim();if(!line)continue;
-            const cm=line.match(/^(?:public|private|internal|protected|sealed|abstract).*?\bclass\s+(\w+)/);
-            if(cm){curClass=cm[1];continue}
-            const rm=line.match(/\/\/\s*RVA:\s*0x([0-9A-Fa-f]+)/i);
+            const ln=raw.trim();if(!ln)continue;
+            const cm=ln.match(/^(?:public|private|internal|protected|sealed|abstract).*?\bclass\s+(\w+)/);
+            if(cm){curCls=cm[1];continue}
+            const rm=ln.match(/\/\/\s*RVA:\s*0x([0-9A-Fa-f]+)/i);
             if(rm){lastRVA=parseInt(rm[1],16);continue}
-            if(lastRVA!==null&&targetSet.has(lastRVA)){
-                if(!result[lastRVA]&&line&&!line.startsWith('//')&&!line.startsWith('[')&&line!=='{'&&line!=='}'){
-                    result[lastRVA]={sig:line,cls:curClass};
-                    targetSet.delete(lastRVA);
-                    if(targetSet.size===0)break;
-                }
+            if(lastRVA!==null&&tgt.has(lastRVA)&&!res[lastRVA]&&ln&&!ln.startsWith('//')&&!ln.startsWith('[')&&ln!=='{'&&ln!=='}'){
+                res[lastRVA]={sig:ln,cls:curCls};
+                tgt.delete(lastRVA);
+                if(!tgt.size)break;
             }
         }
-        if(targetSet.size===0)break;
-        if(bytesRead%(4*1024*1024)<512*1024){onP(bytesRead/total);await tick()}
+        if(!tgt.size)break;
+        if(br%(4*1024*1024)<524288){cb(br/tot);await tick()}
     }
-    return result;
+    return res;
 }
 
-async function renderUnity(rows,rvaMap,oSz,pSz){
-    const container=document.getElementById('unity-result');
-    container.innerHTML='';
+async function renderUnity(rows,rmap,os,ps){
+    const con=document.getElementById('uout');
+    con.innerHTML='';
+
+    // Stats
     const c=t=>rows.filter(r=>r.type===t).length;
-    const statsDiv=document.createElement('div');
-    statsDiv.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:18px';
-    const d=pSz-oSz;
-    statsDiv.innerHTML='<div class="stat-card"><span class="stat-val" style="color:var(--primary)">'+rows.length+'</span><div class="stat-lbl">Tong patch</div></div>'
-        +'<div class="stat-card"><span class="stat-val" style="color:var(--red)">'+c('ret')+'</span><div class="stat-lbl">RET killed</div></div>'
+    const sd=document.createElement('div');
+    sd.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:16px';
+    const dd=ps-os;
+    sd.innerHTML='<div class="stat-card"><span class="stat-val" style="color:var(--primary)">'+rows.length+'</span><div class="stat-lbl">Tong</div></div>'
+        +'<div class="stat-card"><span class="stat-val" style="color:var(--red)">'+c('ret')+'</span><div class="stat-lbl">RET</div></div>'
         +'<div class="stat-card"><span class="stat-val" style="color:var(--green)">'+c('b')+'</span><div class="stat-lbl">B Hook</div></div>'
-        +'<div class="stat-card"><span class="stat-val" style="color:var(--orange)">'+c('mov0')+'</span><div class="stat-lbl">MOV #0</div></div>'
-        +'<div class="stat-card"><span class="stat-val" style="color:var(--purple)">'+c('mov1')+'</span><div class="stat-lbl">MOV #1</div></div>'
+        +'<div class="stat-card"><span class="stat-val" style="color:var(--orange)">'+c('mov0')+'</span><div class="stat-lbl">MOV#0</div></div>'
+        +'<div class="stat-card"><span class="stat-val" style="color:var(--purple)">'+c('mov1')+'</span><div class="stat-lbl">MOV#1</div></div>'
         +'<div class="stat-card"><span class="stat-val" style="color:var(--primary)">'+c('nop')+'</span><div class="stat-lbl">NOP</div></div>'
-        +'<div class="stat-card"><span class="stat-val" style="color:var(--muted)">'+(d>=0?'+':'')+fmtSz(Math.abs(d))+'</span><div class="stat-lbl">Size diff</div></div>';
-    container.appendChild(statsDiv);
-    const toolbar=document.createElement('div');
-    toolbar.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap';
-    toolbar.innerHTML='<button class="btn-selall" onclick="selAll2(true)">&#9745; ALL</button>'
-        +'<button class="btn-selall" onclick="selAll2(false)">&#9744; NONE</button>&nbsp;'
-        +'<div class="fbtn active" onclick="filtUnity(\'all\',this)">ALL</div>'
-        +'<div class="fbtn" onclick="filtUnity(\'ret\',this)">RET</div>'
-        +'<div class="fbtn" onclick="filtUnity(\'b\',this)">B HOOK</div>'
-        +'<div class="fbtn" onclick="filtUnity(\'mov0\',this)">MOV#0</div>'
-        +'<div class="fbtn" onclick="filtUnity(\'mov1\',this)">MOV#1</div>'
-        +'<div class="fbtn" onclick="filtUnity(\'nop\',this)">NOP</div>'
-        +'<div class="fbtn" onclick="filtUnity(\'other\',this)">OTHER</div>&nbsp;'
-        +'<button class="btn-export" id="btn2-export" style="display:inline-block" onclick="exportPatched2()">&#128190; EXPORT PATCHED FILE</button>'
-        +'<span style="font-size:10px;color:var(--muted)" id="sel2-count">0 da chon</span>';
-    container.appendChild(toolbar);
-    await tick();
+        +'<div class="stat-card"><span class="stat-val" style="color:var(--muted)">'+(dd>=0?'+':'')+fsz(Math.abs(dd))+'</span><div class="stat-lbl">Size diff</div></div>';
+    con.appendChild(sd);
 
-    const PURPOSE={
-        'AnoSDK':{color:'gh-red',icon:'&#128308;',title:'Anti-cheat Engine (AnoSDK)',desc:'Toan bo engine anti-cheat Tencent bi vo hieu hoa — game khong detect duoc cheat.'},
-        'LSynchrReport':{color:'gh-red',icon:'&#128308;',title:'Frame Sync Hash Check',desc:'Tat kiem tra hash dong bo frame — server khong phat hien duoc battle data bi sua.'},
-        'LFrameSyncBattleLogic':{color:'gh-red',icon:'&#128308;',title:'Battle Integrity',desc:'Tat CalcuBattleHash — khong gui du lieu kiem tra toan ven tran dau.'},
-        'BattleStatistic':{color:'gh-orange',icon:'&#128992;',title:'Battle Report & Verify',desc:'Tat bao cao ket qua tran, khong verify dieu kien.'},
-        'ApolloEventReport':{color:'gh-orange',icon:'&#128992;',title:'Analytics & Tracking',desc:'Tat analytics — khong tracking nguoi dung.'},
-        'IApolloHelper':{color:'gh-orange',icon:'&#128992;',title:'Analytics Helper',desc:'Tat AddCacheReport va OnLogin tracking.'},
-        'FirebasePush':{color:'gh-orange',icon:'&#128992;',title:'Firebase Analytics',desc:'Tat TryReportInfo — khong gui analytics len Firebase.'},
-        'LobbyMsgHandler':{color:'gh-orange',icon:'&#128992;',title:'Security Report',desc:'Tat onTriggerSecurityDataReport.'},
-        'SettlementSystem':{color:'gh-orange',icon:'&#128992;',title:'Post-match Report',desc:'Tat cacheGameInfoData va ReportTLogDataToLobby.'},
-        'CChatController':{color:'gh-yellow',icon:'&#128993;',title:'Chat Complaint',desc:'Tat xu ly complaint chat.'},
-        'CChatNetUT':{color:'gh-yellow',icon:'&#128993;',title:'Chat Network',desc:'Tat On_Chat_Complaint tu server.'},
-        'LInBattleMsgNetCore':{color:'gh-yellow',icon:'&#128993;',title:'InBattle Chat Net',desc:'Tat gui chat trong tran.'},
-        'InBattleMsgNetCore':{color:'gh-yellow',icon:'&#128993;',title:'InBattle Complaint',desc:'Tat toan bo complaint trong tran.'},
-        'LGameBuilder':{color:'gh-yellow',icon:'&#128993;',title:'Game Builder Handler',desc:'Tat Handle_SendInBattleMsg_ChatComplaint.'},
-        'LStateSyncMsgHandler':{color:'gh-yellow',icon:'&#128993;',title:'State Sync Handler',desc:'Tat xu ly complaint trong state sync.'},
-        'GameBuilder':{color:'gh-yellow',icon:'&#128993;',title:'Game Builder Chat',desc:'Tat Handle_On_ChatComplaint_NTF/RSP.'},
-        'LBaseRelayMsgSvrHandler':{color:'gh-yellow',icon:'&#128993;',title:'Relay Server Handler',desc:'Tat voice complaint response.'},
-        'GameSettings':{color:'gh-blue',icon:'&#128309;',title:'FPS Settings',desc:'Unlock 60/90 FPS, bypass device check.'},
-        'CRoleInfo':{color:'gh-purple',icon:'&#128995;',title:'Player Role Data',desc:'Patch VIP flags, hero/skin.'},
+    // Toolbar
+    const tb=document.createElement('div');
+    tb.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap';
+    tb.innerHTML='<button class="btn-sel" onclick="sa2(true)">&#9745; ALL</button>'
+        +'<button class="btn-sel" onclick="sa2(false)">&#9744; NONE</button>&nbsp;'
+        +'<div class="fbtn active" onclick="fu(\'all\',this)">ALL</div>'
+        +'<div class="fbtn" onclick="fu(\'ret\',this)">RET</div>'
+        +'<div class="fbtn" onclick="fu(\'b\',this)">B HOOK</div>'
+        +'<div class="fbtn" onclick="fu(\'mov0\',this)">MOV#0</div>'
+        +'<div class="fbtn" onclick="fu(\'mov1\',this)">MOV#1</div>'
+        +'<div class="fbtn" onclick="fu(\'nop\',this)">NOP</div>'
+        +'<div class="fbtn" onclick="fu(\'other\',this)">OTHER</div>&nbsp;'
+        +'<button class="btn-export" id="btn2e" style="display:inline-block" onclick="exp2()">&#128190; EXPORT PATCHED</button>'
+        +'<span style="font-size:10px;color:var(--muted)" id="sel2c">0 da chon</span>';
+    con.appendChild(tb);await tick();
+
+    const PUR={
+        'AnoSDK':{g:'gh-red',i:'&#128308;',t:'Anti-cheat Engine (AnoSDK)',d:'Toan bo engine anti-cheat Tencent bi vo hieu hoa.'},
+        'LSynchrReport':{g:'gh-red',i:'&#128308;',t:'Frame Sync Hash Check',d:'Tat kiem tra hash dong bo — server khong detect battle data bi sua.'},
+        'LFrameSyncBattleLogic':{g:'gh-red',i:'&#128308;',t:'Battle Integrity',d:'Tat CalcuBattleHash — khong gui du lieu toan ven tran dau.'},
+        'BattleStatistic':{g:'gh-orange',i:'&#128992;',t:'Battle Report',d:'Tat bao cao ket qua tran, khong verify dieu kien.'},
+        'ApolloEventReport':{g:'gh-orange',i:'&#128992;',t:'Analytics',d:'Tat analytics — khong tracking nguoi dung.'},
+        'IApolloHelper':{g:'gh-orange',i:'&#128992;',t:'Analytics Helper',d:'Tat AddCacheReport va OnLogin.'},
+        'FirebasePush':{g:'gh-orange',i:'&#128992;',t:'Firebase',d:'Tat TryReportInfo — khong gui analytics len Firebase.'},
+        'LobbyMsgHandler':{g:'gh-orange',i:'&#128992;',t:'Security Report',d:'Tat onTriggerSecurityDataReport.'},
+        'SettlementSystem':{g:'gh-orange',i:'&#128992;',t:'Post-match Report',d:'Tat cacheGameInfoData va ReportTLogDataToLobby.'},
+        'CChatController':{g:'gh-yellow',i:'&#128993;',t:'Chat Complaint',d:'Tat xu ly complaint chat.'},
+        'CChatNetUT':{g:'gh-yellow',i:'&#128993;',t:'Chat Network',d:'Tat On_Chat_Complaint tu server.'},
+        'LInBattleMsgNetCore':{g:'gh-yellow',i:'&#128993;',t:'InBattle Chat',d:'Tat gui chat trong tran.'},
+        'InBattleMsgNetCore':{g:'gh-yellow',i:'&#128993;',t:'InBattle Complaint',d:'Tat toan bo complaint trong tran.'},
+        'LGameBuilder':{g:'gh-yellow',i:'&#128993;',t:'Game Builder',d:'Tat Handle_ChatComplaint.'},
+        'LStateSyncMsgHandler':{g:'gh-yellow',i:'&#128993;',t:'State Sync',d:'Tat complaint trong state sync.'},
+        'GameBuilder':{g:'gh-yellow',i:'&#128993;',t:'Builder Chat',d:'Tat Handle_On_ChatComplaint.'},
+        'LBaseRelayMsgSvrHandler':{g:'gh-yellow',i:'&#128993;',t:'Relay Handler',d:'Tat voice complaint.'},
+        'GameSettings':{g:'gh-blue',i:'&#128309;',t:'FPS Settings',d:'Unlock 60/90 FPS, bypass device check.'},
+        'CRoleInfo':{g:'gh-purple',i:'&#128995;',t:'Player Data',d:'Patch VIP flags, hero/skin.'},
     };
-    const COLOR_ORDER={'gh-red':0,'gh-orange':1,'gh-yellow':2,'gh-blue':3,'gh-purple':4};
+    const CO={'gh-red':0,'gh-orange':1,'gh-yellow':2,'gh-blue':3,'gh-purple':4};
+    const FDB={
+        'InitEx':'Ham khoi tao AnoSDK. Bi kill => AnoSDK khong chay, khong detect cheat.',
+        'AnoSDKInitEx':'Native extern init AnoSDK. Bi kill => AnoSDK cam diec hoan toan.',
+        'AnoSDKOnResume':'Goi khi app resume. Bi kill => sau minimize AnoSDK van off.',
+        'AnoSDKDelReportData4':'Giai phong report data. Bi kill => pipeline report bi gay.',
+        'AnoSDKFree':'Giai phong bo nho AnoSDK. Bi kill => security packet bi block.',
+        'Reset':'Reset sync state. Bi kill => hash check fail silent.',
+        'CloseUpload':'Dong upload channel. Bi kill => khong gui duoc hash data.',
+        'OnNotifyHashCheckUnsyncByDs':'Callback khi server detect desync. Bi kill => game khong kick, khong phan ung.',
+        'DequeHashValueByFrameNum':'Lay hash theo frame. Bi kill => server khong verify battle data.',
+        'OnActorRevive':'Xu ly revive event. Bi kill => hash check luon bypass.',
+        'CalcuBattleHash':'Tinh hash battle state. Bi kill => server khong detect thay doi.',
+        'SampleAndSendFrameSyncData':'Gui frame sync. Bi kill => server khong detect speedhack.',
+        'IsNeedReportCompetitionData':'Check can report. Bi kill => skip report.',
+        'ResetCheetCommandSetWarmBattleResultInfo':'Reset cheat info. Bi hook => custom handler thay the.',
+        'VerifyCondition':'Verify dieu kien. Bi kill => claim achievement tuy y.',
+        'ReportEventOpenApp':'Bao cao event. Bi kill => mat tracking session.',
+        'AddCacheReport':'Cache analytics. Bi kill => pipeline analytics bi block.',
+        'OnLogin':'Track login. Bi kill => session mat.',
+        'TryReportInfo':'Gui info Firebase. Bi kill => Firebase khong biet device.',
+        'reportInfo':'Gui device info. Bi kill => Firebase mu.',
+        'onTriggerSecurityDataReport':'Gui security report. Bi kill => khong bao gio gui len server.',
+        'cacheGameInfoData':'Cache post-game. Bi kill => settlement khong co data.',
+        'ReportTLogDataToLobby':'Gui TLog lobby. Bi kill => lobby khong nhan ket qua tran.',
+        'CalcuBattleHash':'Tinh hash battle. Bi kill => server mu hoan toan.',
+    };
 
-    const grouped={};
+    const grp={};
     rows.forEach(r=>{
-        const cls=rvaMap[r.rva]?rvaMap[r.rva].cls:'Unknown';
-        if(!grouped[cls])grouped[cls]=[];
-        grouped[cls].push({...r,info:rvaMap[r.rva]});
+        const c2=rmap[r.rva]?rmap[r.rva].cls:'Unknown';
+        if(!grp[c2])grp[c2]=[];
+        grp[c2].push({...r,info:rmap[r.rva]});
     });
 
-    const sortedGroups=Object.entries(grouped).sort((a,b)=>{
-        const pa=PURPOSE[a[0]],pb=PURPOSE[b[0]];
-        const oa=pa?COLOR_ORDER[pa.color]??5:6;
-        const ob2=pb?COLOR_ORDER[pb.color]??5:6;
-        return oa-ob2||a[0].localeCompare(b[0]);
+    const sg=Object.entries(grp).sort((a,b)=>{
+        const pa=PUR[a[0]],pb2=PUR[b[0]];
+        return (pa?CO[pa.g]??5:6)-(pb2?CO[pb2.g]??5:6)||a[0].localeCompare(b[0]);
     });
 
-    for(const[cls,clsRows] of sortedGroups){
-        const pur=PURPOSE[cls]||{color:'gh-blue',icon:'&#9898;',title:cls,desc:'Khong co thong tin trong database.'};
-        const isAnti=pur.color==='gh-red';
-        const grpId='grp_'+cls;
-        const grpDiv=document.createElement('div');
-        grpDiv.className='group-block';
-        let html='<div class="group-hdr '+pur.color+'" style="justify-content:space-between">'
-            +'<span style="display:flex;align-items:center;gap:8px"><span>'+pur.icon+'</span><b>'+pur.title+'</b>'
-            +'<span style="opacity:.6;font-size:9px">('+clsRows.length+' patch)</span></span>'
-            +'<span style="display:flex;gap:6px;flex-shrink:0">'
-            +'<button class="btn-selall" onclick="selGroup(\''+grpId+'\',true)" style="font-size:9px;padding:3px 8px">&#9745; TAT CA</button>'
-            +'<button class="btn-selall" onclick="selGroup(\''+grpId+'\',false)" style="font-size:9px;padding:3px 8px">&#9744; BO</button>'
+    for(const[gcls,grows] of sg){
+        const pur=PUR[gcls]||{g:'gh-blue',i:'&#9898;',t:gcls,d:'Khong co thong tin.'};
+        const isAnti=pur.g==='gh-red';
+        const gid='g_'+gcls;
+        const gdiv=document.createElement('div');
+        gdiv.className='g-block';
+        let html='<div class="g-hdr '+pur.g+'" style="justify-content:space-between">'
+            +'<span style="display:flex;align-items:center;gap:8px">'+pur.i+' <b>'+pur.t+'</b>'
+            +' <span style="opacity:.6;font-size:9px">('+grows.length+')</span></span>'
+            +'<span style="display:flex;gap:6px">'
+            +'<button class="btn-sel" onclick="sg2(\''+gid+'\',true)" style="font-size:9px;padding:3px 8px">&#9745; TAT CA</button>'
+            +'<button class="btn-sel" onclick="sg2(\''+gid+'\',false)" style="font-size:9px;padding:3px 8px">&#9744; BO</button>'
             +'</span></div>'
-            +'<div style="font-size:10px;color:var(--yellow);padding:6px 14px 10px;background:#0d1008;border:1px solid var(--border);border-radius:6px;margin-bottom:8px">'+pur.desc+'</div>';
+            +'<div class="g-desc">'+pur.d+'</div>';
 
-        clsRows.forEach(r=>{
+        grows.forEach(r=>{
             const rv=r.rva.toString(16).toUpperCase().padStart(8,'0');
             const info=r.info;
             const sig=info?info.sig:'Khong tim thay trong dump.cs';
-            const fname=info?getFuncName(info.sig):rv;
+            const fname=info?(sig.match(/\b(\w+)\s*\(/)||[,'?'])[1]:'?';
             const chk=isAnti?'checked':'';
-            const purpose=getPurpose(r,info);
-            html+='<div class="func-card" data-utype="'+r.type+'">'
-                +'<div class="func-head" onclick="toggleFunc(this)">'
-                +'<input type="checkbox" class="chk u2-chk" '+chk+' data-rva="'+rv+'" data-group="'+grpId+'" onclick="event.stopPropagation();updateSel2()" style="flex-shrink:0;margin-right:4px">'
-                +'<div class="func-rva" onclick="event.stopPropagation();copyTxt(\''+rv+'\')">'+rv+'</div>'
-                +'<span class="func-name" title="'+sig+'">'+fname+'</span>'
-                +'<span class="func-type"><span class="type-badge '+r.cls+'">'+r.lbl+'</span></span>'
+            // Patch bytes hien thi sau fix
+            const fixedP=fixedPatchBytes(r.patch);
+            // Purpose
+            const TD={'ret':'<b style="color:var(--red)">RET</b> — Instruction dau tien bi thay bang C0 03 5F D6. Function bi kill hoan toan.',
+                'mov0':'<b style="color:var(--orange)">MOV+RET</b> — Luon tra ve false/0/null.',
+                'mov1':'<b style="color:var(--purple)">MOV+RET</b> — Luon tra ve true/1.',
+                'nop':'<b style="color:var(--primary)">NOP</b> — Branch/check bi vo hieu.',
+                'b':'<b style="color:var(--green)">B HOOK</b> — Redirect sang hook handler.',
+                'other':'<b>PATCH</b> — Bytes bi ghi de.'};
+            const impact=FDB[fname]||(r.type==='ret'?'Void function bi kill, khong thuc thi logic nao.':r.type==='mov0'?'Luon tra ve false/0.':r.type==='mov1'?'Luon tra ve true/1.':r.type==='b'?'Redirect sang hook.':'Bytes bi ghi de.');
+            html+='<div class="f-card" data-utype="'+r.type+'">'
+                +'<div class="f-head" onclick="tf(this)">'
+                +'<input type="checkbox" class="chk u2c" '+chk+' data-rva="'+rv+'" data-group="'+gid+'" onclick="event.stopPropagation();usel2()" style="flex-shrink:0">'
+                +'<span class="f-rva" onclick="event.stopPropagation();cp(\''+rv+'\')">'+rv+'</span>'
+                +'<span class="f-name" title="'+sig+'">'+fname+'</span>'
+                +'<span class="badge '+r.c+'">'+r.lbl+'</span>'
                 +'</div>'
-                +'<div class="func-sig">'
-                +'<div style="padding:8px 14px 4px"><div style="font-size:9px;color:var(--muted);margin-bottom:3px">SIGNATURE</div><code style="font-size:10px;color:#80ccaa">'+sig+'</code></div>'
-                +'<div style="display:flex;gap:10px;padding:4px 14px 10px;flex-wrap:wrap">'
-                +'<div><div style="font-size:9px;color:var(--red);margin-bottom:3px">ORIGINAL</div><div class="hex-box ho">'+toHex(r.orig,16)+'</div></div>'
-                +'<div><div style="font-size:9px;color:var(--green);margin-bottom:3px">PATCHED</div><div class="hex-box hp">'+toHex(r.patch,16)+'</div></div>'
-                +'</div></div>'
-                +'<div class="func-purpose">'+purpose+'</div>'
-                +'</div>';
+                +'<div class="f-body">'
+                +'<div class="f-sig"><div style="font-size:9px;color:var(--muted);margin-bottom:3px">SIGNATURE</div><code>'+sig+'</code></div>'
+                +'<div class="f-hex">'
+                +'<div><div style="font-size:9px;color:var(--red);margin-bottom:3px">ORIGINAL</div><span class="hbox ho">'+h(r.orig,16)+'</span></div>'
+                +'<div><div style="font-size:9px;color:var(--green);margin-bottom:3px">PATCHED (fixed)</div><span class="hbox hp">'+h(fixedP,16)+'</span></div>'
+                +'</div>'
+                +'<div class="f-purpose"><b>Cach patch:</b> '+(TD[r.type]||r.type)+'<br><b>Tac dong:</b> '+impact+'</div>'
+                +'</div></div>';
         });
-        grpDiv.innerHTML=html;
-        container.appendChild(grpDiv);
-        updateSel2();
+        gdiv.innerHTML=html;
+        con.appendChild(gdiv);
+        usel2();
         await tick();
     }
 }
 
-function toggleFunc(el){el.nextElementSibling.classList.toggle('open');el.nextElementSibling.nextElementSibling.classList.toggle('open')}
-function getFuncName(sig){const m=sig.match(/\b(\w+)\s*\(/);return m?m[1]:sig.substring(0,40)}
-
-function getPurpose(r,info){
-    if(!info)return '<b>Khong tim thay trong dump.cs</b>';
-    const sig=info.sig.trim(),cls=info.cls||'',t=r.type,fname=getFuncName(sig);
-    const TD={'ret':'<span style="color:var(--red)">RET</span> — Kill hoan toan, goi vao return ngay.','mov0':'<span style="color:var(--orange)">MOV+RET</span> — Luon tra ve false/0/null.','mov1':'<span style="color:var(--purple)">MOV+RET</span> — Luon tra ve true/1.','nop':'<span style="color:var(--primary)">NOP</span> — Branch/check bi vo hieu.','b':'<span style="color:var(--green)">B HOOK</span> — Redirect sang hook handler.','other':'<span style="color:var(--muted)">PATCH</span> — Bytes bi ghi de.'};
-    const FDB={'InitEx':'Ham khoi tao AnoSDK. Bi kill => AnoSDK khong bao gio chay, khong detect duoc cheat.','AnoSDKInitEx':'Native extern khoi tao AnoSDK tang thap. Bi kill => AnoSDK cam diec hoan toan.','AnoSDKOnResume':'Goi khi app resume. Bi kill => sau khi minimize, AnoSDK van khong hoat dong.','AnoSDKDelReportData4':'Giai phong report data. Bi kill => pipeline gui report bi gay.','AnoSDKFree':'Giai phong bo nho AnoSDK. Bi kill => moi goi tin security bi block.','Reset':'Reset trang thai sync. Bi kill => hash check fail silent.','CloseUpload':'Dong upload channel. Bi kill => khong bao gio gui duoc hash data.','OnNotifyHashCheckUnsyncByDs':'Callback khi server phat hien desync. Bi kill => game khong phan ung, khong kick.','DequeHashValueByFrameNum':'Lay hash theo frame. Bi kill => server khong verify duoc battle data.','OnActorRevive':'Xu ly event hoi sinh. Bi kill => hash check luon bi bypass.','CalcuBattleHash':'Tinh hash battle state. Bi kill => hash = 0, server khong detect thay doi.','SampleAndSendFrameSyncData':'Gui frame sync data. Bi kill => server khong nhan duoc, khong detect speedhack.','IsNeedReportCompetitionData':'Check can report competition. Bi kill => luon skip report.','ResetCheetCommandSetWarmBattleResultInfo':'Reset cheat command info. Bi hook => custom handler thay the.','VerifyCondition':'Verify star condition. Bi kill => claim achievement tuy y.','ReportEventOpenApp':'Bao cao event mo app. Bi kill => Tencent mat tracking session.','AddCacheReport':'Cache analytics event. Bi kill => toan bo pipeline bi block.','OnLogin':'Track login GCloud. Bi kill => session analytics mat.','TryReportInfo':'Gui info len Firebase. Bi kill => Firebase khong biet device nay.','reportInfo':'Gui device info. Bi kill => Firebase mu hoan toan.','GetPushExtraDictObjects':'Lay push extra data. Bi kill => payload trong.','TrySkipGuideLevel1':'Skip guide level 1. Bi kill => progression tracking bi ngat.','onTriggerSecurityDataReport':'Gui security report. Bi kill => khong bao gio gui len server.','cacheGameInfoData':'Cache post-game data. Bi kill => settlement khong co data.','ReportTLogDataToLobby':'Gui TLog ve lobby. Bi kill => lobby khong nhan ket qua tran.','CommonOnRequestAddMatchBlack':'Add blacklist. Bi kill => khong ai bi blacklist du bi report.'};
-    let out='<b>'+fname+'</b> <span style="font-size:9px;color:var(--muted)">'+cls+'</span><br><br>';
-    out+='<b>Patch:</b> '+(TD[t]||t)+'<br><br>';
-    out+='<b>Tac dong:</b> '+(FDB[fname]||(t==='ret'?'Void function bi kill.':t==='mov0'?'Tra ve false/0.':t==='mov1'?'Tra ve true/1.':t==='b'?'Redirect sang hook.':'Bytes bi ghi de.'));
-    return out;
-}
-
-function filtUnity(type,btn){
+function tf(el){el.nextElementSibling.classList.toggle('open')}
+function fu(t,btn){
     document.querySelectorAll('#tab1 .fbtn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('.func-card[data-utype]').forEach(card=>{card.style.display=(type==='all'||card.dataset.utype===type)?'':'none'});
-    document.querySelectorAll('.group-block').forEach(grp=>{
-        grp.style.display=grp.querySelectorAll('.func-card[data-utype]:not([style*="display: none"])').length?'':'none';
+    document.querySelectorAll('.f-card[data-utype]').forEach(c=>{c.style.display=(t==='all'||c.dataset.utype===t)?'':'none'});
+    document.querySelectorAll('.g-block').forEach(g=>{
+        g.style.display=g.querySelectorAll('.f-card[data-utype]:not([style*="display: none"])').length?'':'none';
     });
 }
-function selGroup(grpId,v){document.querySelectorAll('.u2-chk[data-group="'+grpId+'"]').forEach(c=>c.checked=v);updateSel2()}
-function selAll2(v){document.querySelectorAll('.u2-chk').forEach(c=>c.checked=v);updateSel2()}
-function updateSel2(){
-    const n=document.querySelectorAll('.u2-chk:checked').length;
-    const t=document.querySelectorAll('.u2-chk').length;
-    const el=document.getElementById('sel2-count');if(el)el.innerText=n+' / '+t+' da chon';
-    const btn=document.getElementById('btn2-export');if(btn)btn.innerText='EXPORT ('+n+' patch)';
+function sg2(gid,v){document.querySelectorAll('.u2c[data-group="'+gid+'"]').forEach(c=>c.checked=v);usel2()}
+function sa2(v){document.querySelectorAll('.u2c').forEach(c=>c.checked=v);usel2()}
+function usel2(){
+    const n=document.querySelectorAll('.u2c:checked').length;
+    const t=document.querySelectorAll('.u2c').length;
+    const el=document.getElementById('sel2c');if(el)el.innerText=n+'/'+t+' da chon';
+    const btn=document.getElementById('btn2e');if(btn)btn.innerText='EXPORT ('+n+' patch)';
 }
 
-async function exportPatched2(){
-    if(!FILES['2-orig']){alert('Chua co file goc!');return}
-    if(!FILES['2-patch']){alert('Chua co file patch!');return}
+async function exp2(){
+    if(!F['2-orig']||!F['2-patch']){alert('Can co file goc va patch!');return}
     const t2=document.getElementById('toast');
     t2.innerText='Dang xu ly...';t2.className='show';
-    const origBuf=await readBuf(FILES['2-orig']);
-    const patchBuf=await readBuf(FILES['2-patch']);
-    const origArr=new Uint8Array(origBuf);
-    const patchArr=new Uint8Array(patchBuf);
-    const out=new Uint8Array(origArr.slice(0));
-    const checks=document.querySelectorAll('.u2-chk');
+    const ob=await rbuf(F['2-orig']);
+    const pb=await rbuf(F['2-patch']);
+    const oa=new Uint8Array(ob);
+    const pa=new Uint8Array(pb);
+    const out=new Uint8Array(oa.slice(0));
     let applied=0;
-    checks.forEach(chk=>{
+    document.querySelectorAll('.u2c').forEach(chk=>{
         if(!chk.checked)return;
         const rv=chk.dataset.rva;if(!rv)return;
-        const rvaInt=parseInt(rv,16);
-        if(isNaN(rvaInt)||rvaInt<=0)return;
-        // Tim do dai patch
+        const ri=parseInt(rv,16);if(isNaN(ri)||ri<=0)return;
+        // Tim do dai patch: so sanh goc vs patch
         let len=0;
-        while(rvaInt+len<patchArr.length&&rvaInt+len<origArr.length){
-            if(patchArr[rvaInt+len]===origArr[rvaInt+len])break;
+        while(ri+len<pa.length&&ri+len<oa.length){
+            if(pa[ri+len]===oa[ri+len])break;
             len++;if(len>=32)break;
         }
-        if(len===0)return;
-        // Ghi patch bytes, fix D5->D6
-        for(let i=0;i<len;i++){
-            let b=patchArr[rvaInt+i];
-            
-            out[rvaInt+i]=b;
-        }
+        if(!len)return;
+        // Ghi bytes, fix D5->D6
+        const tmp=pa.slice(ri,ri+len);
+        const fixed=fixedPatchBytes(tmp);
+        out.set(fixed,ri);
         applied++;
     });
-    const blob=new Blob([out],{type:'application/octet-stream'});
+    dl(out,(F['2-orig'].name||'unity').replace(/\.([^.]+)$/,'_patched.$1'));
+    t2.innerText='EXPORTED '+applied+' PATCHES';
+    t2.className='show';
+    setTimeout(()=>{t2.innerText='COPIED';t2.className=''},2500);
+}
+
+// ── DOWNLOAD ──────────────────────────────────────────────────
+function dl(data,name){
+    const blob=new Blob([data],{type:'application/octet-stream'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url;
-    a.download=(FILES['2-orig'].name||'unity').replace(/\.([^.]+)$/,'_patched.$1');
-    a.click();URL.revokeObjectURL(url);
-    t2.innerText='EXPORTED '+applied+' PATCHES';t2.className='show';
-    setTimeout(()=>{t2.innerText='COPIED';t2.className=''},2500);
+    a.href=url;a.download=name;a.click();
+    URL.revokeObjectURL(url);
 }
 </script>
 
