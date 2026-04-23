@@ -728,10 +728,10 @@ async function renderUnity(rows, rvaMap, oSz, pSz){
             const fname=info?getFuncName(info.sig):rv;
             const purpose=getPurpose(r,info);
             const chk=isAnti?'checked':'';
-            const idx=rows2_idx++;
+            rows2_idx++;
             grpHtml+=`<div class="func-card">
                 <div class="func-head" onclick="toggleFunc(this)">
-                    <input type="checkbox" class="chk u2-chk" ${chk} data-idx="${idx}" data-group="${grpId}" onclick="event.stopPropagation();updateSel2()" style="flex-shrink:0;margin-right:4px">
+                    <input type="checkbox" class="chk u2-chk" ${chk} data-rva="${rv}" data-group="${grpId}" onclick="event.stopPropagation();updateSel2()" style="flex-shrink:0;margin-right:4px">
                     <div class="func-rva" onclick="event.stopPropagation();copyTxt('${rv}')">${rv}</div>
                     <span class="func-name" title="${sig}">${fname}</span>
                     <span class="func-type"><span class="type-badge ${r.cls}">${r.lbl}</span></span>
@@ -909,13 +909,16 @@ async function exportPatched2(){
     if(!FILES['2-orig']){alert('Chưa có file gốc!');return}
     const origBuf=await readBuf(FILES['2-orig']);
     const out=new Uint8Array(origBuf.slice(0));
+    // Build RVA→row map từ rows2 (flat array theo thứ tự diff)
+    const rvaRowMap={};
+    rows2.forEach(r=>{ rvaRowMap[r.rva.toString(16).toUpperCase().padStart(8,'0')]=r; });
     const checks=document.querySelectorAll('.u2-chk');
     let applied=0;
     checks.forEach(chk=>{
         if(!chk.checked) return;
-        const idx=parseInt(chk.dataset.idx);
-        const r=rows2[idx];
-        if(!r) return;
+        const rv=chk.dataset.rva;
+        const r=rvaRowMap[rv];
+        if(!r){ console.warn('RVA not found:',rv); return; }
         out.set(r.patch, r.rva);
         applied++;
     });
