@@ -965,37 +965,17 @@ async function exportPatched2(){
     if(!FILES['2-patch']) {alert('Chưa có file patch!');return}
 
     const t2=document.getElementById('toast');
-    t2.innerText='⏳ Đang chuẩn bị...';t2.className='show';
+    t2.innerText='Dang chuan bi...';t2.className='show';
 
     const origBuf =await readBuf(FILES['2-orig']);
     const patchBuf=await readBuf(FILES['2-patch']);
+    const origArr =new Uint8Array(origBuf);
+    const patchArr=new Uint8Array(patchBuf);
 
-    const origSegs =parseMachoSegments(origBuf);
-    const patchSegs=parseMachoSegments(patchBuf);
+    // Base = file goc, khong copy header hay hook segment
+    // Chi ghi dung bytes da duoc chon — giong hex edit tay
+    const out=new Uint8Array(origArr.slice(0));
 
-    // Tìm hook segments trong patch
-    const hookSegs=patchSegs.filter(s=>s.name.includes('HOOK')||s.name==='__PP_OFFSETS'||s.name==='__PP_PATCHES');
-
-    // Tính tổng size cần thiết = size file gốc + tổng size các hook segment
-    let extraSize=0;
-    hookSegs.forEach(s=>{ if(s.fo>=origBuf.byteLength) extraSize+=s.fsz; });
-
-    // Allocate output buffer
-    // Dùng size của patch file — đã bao gồm hook segments
-    const out=new Uint8Array(Math.max(origBuf.byteLength, patchBuf.byteLength));
-
-    // Step 1: Copy file gốc làm base
-    out.set(new Uint8Array(origBuf));
-
-    // Step 2: Copy Mach-O header từ patch (vì patch có thêm LC_SEGMENT cho hook)
-    // Chỉ copy phần header (trước __text section start)
-    const TEXT_START=0x4000; // start of __text trong __TEXT segment
-    const patchHdr=new Uint8Array(patchBuf,0,TEXT_START);
-    out.set(patchHdr,0);
-
-    // Step 3: Apply patch — đọc thẳng từ file patch tại RVA
-    // Không dùng rows2 (có thể stale) — đọc trực tiếp từ patchArr
-    const patchArr2=new Uint8Array(patchBuf);
     const checks=document.querySelectorAll('.u2-chk');
     let applied=0;
 
@@ -1004,57 +984,41 @@ async function exportPatched2(){
         const rv=chk.dataset.rva;
         if(!rv) return;
         const rvaInt=parseInt(rv,16);
-        if(isNaN(rvaInt)||rvaInt<=0||rvaInt>=patchArr2.length) return;
+        if(isNaN(rvaInt)||rvaInt<=0) return;
 
-        // Đọc 4 bytes từ patch tại RVA này
-        let b0=patchArr2[rvaInt],b1=patchArr2[rvaInt+1],b2=patchArr2[rvaInt+2],b3=patchArr2[rvaInt+3];
-
-        // Fix D5 → D6: C0 03 5F D5 = MSR (crash) → C0 03 5F D6 = RET
-        if(b0===0xC0 && b1===0x03 && b2===0x5F && b3===0xD5){
-            b3=0xD6;
+        // Tim do dai patch: scan tu RVA cho den khi byte goc = byte patch
+        let len=0;
+        while(rvaInt+len < patchArr.length && rvaInt+len < origArr.length){
+            if(patchArr[rvaInt+len]===origArr[rvaInt+len]) break;
+            len++;
+            if(len>=32) break;
         }
+        if(len===0) return;
 
-        out[rvaInt]=b0; out[rvaInt+1]=b1; out[rvaInt+2]=b2; out[rvaInt+3]=b3;
-
-        // Nếu patch dài hơn 4 bytes (MOV+RET = 8 bytes) thì copy thêm
-        // Kiểm tra bằng cách so sánh với gốc
-        const origArr2=new Uint8Array(origBuf);
-        let extraOff=4;
-        while(rvaInt+extraOff<patchArr2.length && rvaInt+extraOff<origArr2.length){
-            if(patchArr2[rvaInt+extraOff]===origArr2[rvaInt+extraOff]) break;
-            out[rvaInt+extraOff]=patchArr2[rvaInt+extraOff];
-            extraOff++;
-            if(extraOff>=32) break; // max 32 bytes per patch
+        // Copy patch bytes
+        for(let i=0;i<len;i++){
+            let b=patchArr[rvaInt+i];
+            // Fix D5->D6: C0 03 5F D5 (MSR crash) -> C0 03 5F D6 (RET)
+            if(i===3 && b===0xD5 && patchArr[rvaInt]===0xC0 && patchArr[rvaInt+1]===0x03 && patchArr[rvaInt+2]===0x5F){
+                b=0xD6;
+            }
+            out[rvaInt+i]=b;
         }
-
         applied++;
     });
 
-    // Step 4: Copy __HOOK_TEXT, __HOOK_DATA (và các hook segment khác) từ patch
-    const patchArr=new Uint8Array(patchBuf);
-    hookSegs.forEach(s=>{
-        if(s.fo>0 && s.fsz>0 && s.fo+s.fsz<=patchArr.length){
-            // Copy segment data
-            const src=new Uint8Array(patchBuf, s.fo, s.fsz);
-            if(s.fo+s.fsz<=out.length){
-                out.set(src, s.fo);
-            }
-        }
-    });
-
-    // Done
     const blob=new Blob([out],{type:'application/octet-stream'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;
     const origName=FILES['2-orig'].name;
-    a.download=origName.replace(/(\.[^.]+)?$/,'_patched$1')||'patched_unity';
+    a.download=origName.replace(/\.([^.]+)$/, '_patched.$1') || 'patched_unity';
     a.click();
     URL.revokeObjectURL(url);
 
-    t2.innerText=`✓ EXPORTED ${applied} PATCHES + ${hookSegs.length} HOOK SEGS`;
+    t2.innerText='EXPORTED ' + applied + ' PATCHES';
     t2.className='show';
-    setTimeout(()=>{t2.innerText='✓ COPIED';t2.className=''},3000);
+    setTimeout(()=>{t2.innerText='COPIED';t2.className=''},2500);
 }
 </script>
 
