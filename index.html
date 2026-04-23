@@ -673,10 +673,13 @@ function renderUnity(rows, rvaMap, oSz, pSz){
         'CRoleInfo':        {color:'gh-purple', icon:'🟣', title:'Player Role Data',                  desc:'Patch dữ liệu player — VIP flags, hero count, skin availability.'},
     };
 
-    // render theo group
+    // render theo group — sort: red first (anti-cheat), then orange, yellow, blue, purple, unknown
+    const COLOR_ORDER={'gh-red':0,'gh-orange':1,'gh-yellow':2,'gh-blue':3,'gh-purple':4};
     const sortedGroups=Object.entries(grouped).sort((a,b)=>{
-        const pa=PURPOSE[a[0]]?0:1, pb=PURPOSE[b[0]]?0:1;
-        return pa-pb||a[0].localeCompare(b[0]);
+        const pa=PURPOSE[a[0]], pb=PURPOSE[b[0]];
+        const oa=pa?COLOR_ORDER[pa.color]??5:6;
+        const ob=pb?COLOR_ORDER[pb.color]??5:6;
+        return oa-ob||a[0].localeCompare(b[0]);
     });
 
     let rows2_idx=0;
@@ -695,13 +698,28 @@ function renderUnity(rows, rvaMap, oSz, pSz){
             const purpose=getPurpose(r, r.info);
             html+=`<div class="func-card">
                 <div class="func-head" onclick="toggleFunc(this)">
-                    <input type="checkbox" class="chk u2-chk" checked data-idx="${rows2_idx++}" onclick="event.stopPropagation();updateSel2()" style="flex-shrink:0;margin-right:4px">
+                    <input type="checkbox" class="chk u2-chk" ${pur.color==='gh-red'?'checked':''} data-idx="${rows2_idx++}" data-group="${grpId}" onclick="event.stopPropagation();updateSel2()" style="flex-shrink:0;margin-right:4px">
                     <div class="func-rva" onclick="event.stopPropagation();copyTxt('${rv}')">${rv}</div>
                     <span class="func-name" title="${sig}">${r.info?getFuncName(r.info.sig):rv}</span>
                     <span class="func-type"><span class="type-badge ${r.cls}">${r.lbl}</span></span>
                 </div>
                 <div class="func-sig">
-                    <code style="font-size:10px;color:var(--muted)">${sig}</code>
+                    <div style="display:flex;gap:10px;padding:8px 14px;flex-wrap:wrap;align-items:flex-start">
+                        <div style="flex:1;min-width:200px">
+                            <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:3px">FUNCTION SIGNATURE</div>
+                            <code style="font-size:10px;color:#80ccaa">${sig}</code>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:10px;padding:0 14px 10px;flex-wrap:wrap">
+                        <div>
+                            <div style="font-size:9px;color:var(--red);letter-spacing:1px;margin-bottom:3px">▼ ORIGINAL</div>
+                            <div class="hex-box ho" style="font-size:10px">${toHex(r.orig,16)}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:9px;color:var(--green);letter-spacing:1px;margin-bottom:3px">▲ PATCHED</div>
+                            <div class="hex-box hp" style="font-size:10px">${toHex(r.patch,16)}</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="func-purpose">
                     💡 ${purpose}
@@ -748,6 +766,10 @@ function getPurpose(r, info){
 // ═══════════════════════════════════════════════════════════════════════════════
 // TAB 2 — SELECT & EXPORT
 // ═══════════════════════════════════════════════════════════════════════════════
+function selGroup(grpId, v){
+    document.querySelectorAll(`.u2-chk[data-group="${grpId}"]`).forEach(c=>c.checked=v);
+    updateSel2();
+}
 function selAll2(v){
     document.querySelectorAll('.u2-chk').forEach(c=>c.checked=v);
     updateSel2();
