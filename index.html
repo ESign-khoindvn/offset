@@ -652,8 +652,17 @@ async function renderUnity(rows, rvaMap, oSz, pSz){
     const toolbar=document.createElement('div');
     toolbar.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap';
     toolbar.innerHTML=`
-        <button class="btn-selall" onclick="selAll2(true)">&#9745; CHON TAT CA</button>
-        <button class="btn-selall" onclick="selAll2(false)">&#9744; BO CHON</button>
+        <button class="btn-selall" onclick="selAll2(true)">&#9745; ALL</button>
+        <button class="btn-selall" onclick="selAll2(false)">&#9744; NONE</button>
+        &nbsp;
+        <div class="fbtn active" id="u2f-all"   onclick="filtUnity('all',this)">ALL</div>
+        <div class="fbtn" id="u2f-ret"   onclick="filtUnity('ret',this)">RET</div>
+        <div class="fbtn" id="u2f-b"     onclick="filtUnity('b',this)">B HOOK</div>
+        <div class="fbtn" id="u2f-mov0"  onclick="filtUnity('mov0',this)">MOV#0</div>
+        <div class="fbtn" id="u2f-mov1"  onclick="filtUnity('mov1',this)">MOV#1</div>
+        <div class="fbtn" id="u2f-nop"   onclick="filtUnity('nop',this)">NOP</div>
+        <div class="fbtn" id="u2f-other" onclick="filtUnity('other',this)">OTHER</div>
+        &nbsp;
         <button class="btn-export" id="btn2-export" style="display:inline-block" onclick="exportPatched2()">&#128190; EXPORT PATCHED FILE</button>
         <span style="font-size:10px;color:var(--muted)" id="sel2-count">0 da chon</span>`;
     container.appendChild(toolbar);
@@ -729,7 +738,7 @@ async function renderUnity(rows, rvaMap, oSz, pSz){
             const purpose=getPurpose(r,info);
             const chk=isAnti?'checked':'';
             rows2_idx++;
-            grpHtml+=`<div class="func-card">
+            grpHtml+=`<div class="func-card" data-utype="${r.type}">
                 <div class="func-head" onclick="toggleFunc(this)">
                     <input type="checkbox" class="chk u2-chk" ${chk} data-rva="${rv}" data-group="${grpId}" onclick="event.stopPropagation();updateSel2()" style="flex-shrink:0;margin-right:4px">
                     <div class="func-rva" onclick="event.stopPropagation();copyTxt('${rv}')">${rv}</div>
@@ -889,6 +898,18 @@ function getPurpose(r, info){
 // ═══════════════════════════════════════════════════════════════════════════════
 // TAB 2 — SELECT & EXPORT
 // ═══════════════════════════════════════════════════════════════════════════════
+function filtUnity(type, btn){
+    document.querySelectorAll('#tab1 .fbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.func-card[data-utype]').forEach(card=>{
+        card.style.display=(type==='all'||card.dataset.utype===type)?'':'none';
+    });
+    // Ẩn/hiện group-block nếu tất cả cards đều ẩn
+    document.querySelectorAll('.group-block').forEach(grp=>{
+        const visible=grp.querySelectorAll('.func-card[data-utype]:not([style*="display: none"])').length;
+        grp.style.display=visible?'':'none';
+    });
+}
 function selGroup(grpId, v){
     document.querySelectorAll(`.u2-chk[data-group="${grpId}"]`).forEach(c=>c.checked=v);
     updateSel2();
@@ -905,31 +926,123 @@ function updateSel2(){
     const btn=document.getElementById('btn2-export');
     if(btn) btn.innerText='💾 EXPORT ('+n+' patch)';
 }
+// ─── Parse Mach-O segments từ ArrayBuffer ────────────────────────────────────
+function parseMachoSegments(buf){
+    const dv=new DataView(buf);
+    const magic=dv.getUint32(0,true);
+    if(magic!==0xFEEDFACF) return [];
+    const ncmds=dv.getUint32(16,true);
+    let off=32;
+    const segs=[];
+    for(let i=0;i<ncmds;i++){
+        const cmd=dv.getUint32(off,true);
+        const csz=dv.getUint32(off+4,true);
+        if(cmd===0x19){
+            const nb=new Uint8Array(buf,off+8,16);
+            let sn='';
+            for(let j=0;j<16;j++){if(nb[j]===0)break;sn+=String.fromCharCode(nb[j]);}
+            const vm  =Number(dv.getBigUint64(off+24,true));
+            const vmsz=Number(dv.getBigUint64(off+32,true));
+            const fo  =Number(dv.getBigUint64(off+40,true));
+            const fsz =Number(dv.getBigUint64(off+48,true));
+            const nsects=dv.getUint32(off+56,true);
+            segs.push({name:sn,vm,vmsz,fo,fsz,nsects,cmdOff:off,cmdSize:csz});
+        }
+        off+=csz;
+    }
+    return segs;
+}
+
+// ─── Ghi segment header (LC_SEGMENT_64) từ patch vào out ─────────────────────
+function copySegmentHeader(outArr, patchBuf, seg){
+    // Copy toàn bộ load command (header) của segment từ patch sang out
+    const src=new Uint8Array(patchBuf, seg.cmdOff, seg.cmdSize);
+    outArr.set(src, seg.cmdOff);
+}
+
 async function exportPatched2(){
-    if(!FILES['2-orig']){alert('Chưa có file gốc!');return}
-    const origBuf=await readBuf(FILES['2-orig']);
-    const out=new Uint8Array(origBuf.slice(0));
-    // Build RVA→row map từ rows2 (flat array theo thứ tự diff)
-    const rvaRowMap={};
-    rows2.forEach(r=>{ rvaRowMap[r.rva.toString(16).toUpperCase().padStart(8,'0')]=r; });
+    if(!FILES['2-orig'])  {alert('Chưa có file gốc!');return}
+    if(!FILES['2-patch']) {alert('Chưa có file patch!');return}
+
+    const t2=document.getElementById('toast');
+    t2.innerText='⏳ Đang chuẩn bị...';t2.className='show';
+
+    const origBuf =await readBuf(FILES['2-orig']);
+    const patchBuf=await readBuf(FILES['2-patch']);
+
+    const origSegs =parseMachoSegments(origBuf);
+    const patchSegs=parseMachoSegments(patchBuf);
+
+    // Tìm hook segments trong patch
+    const hookSegs=patchSegs.filter(s=>s.name.includes('HOOK')||s.name==='__PP_OFFSETS'||s.name==='__PP_PATCHES');
+
+    // Tính tổng size cần thiết = size file gốc + tổng size các hook segment
+    let extraSize=0;
+    hookSegs.forEach(s=>{ if(s.fo>=origBuf.byteLength) extraSize+=s.fsz; });
+
+    // Allocate output buffer
+    // Dùng size của patch file — đã bao gồm hook segments
+    const out=new Uint8Array(Math.max(origBuf.byteLength, patchBuf.byteLength));
+
+    // Step 1: Copy file gốc làm base
+    out.set(new Uint8Array(origBuf));
+
+    // Step 2: Copy Mach-O header từ patch (vì patch có thêm LC_SEGMENT cho hook)
+    // Chỉ copy phần header (trước __text section start)
+    const TEXT_START=0x4000; // start of __text trong __TEXT segment
+    const patchHdr=new Uint8Array(patchBuf,0,TEXT_START);
+    out.set(patchHdr,0);
+
+    // Step 3: Apply patch — đọc thẳng từ file patch tại RVA
+    // Không dùng rows2 (có thể stale) — đọc trực tiếp từ patchArr
+    const patchArr2=new Uint8Array(patchBuf);
     const checks=document.querySelectorAll('.u2-chk');
     let applied=0;
-    // Known bad patches trong file — override fix trước khi write
-    const PATCH_OVERRIDE={
-        // 0x068EC16C: AnoSDK.InitEx bị patch C0035FD5 (sai) thay vì C0035FD6 (RET đúng)
-        '068EC16C': new Uint8Array([0xC0,0x03,0x5F,0xD6]),
-    };
 
     checks.forEach(chk=>{
         if(!chk.checked) return;
         const rv=chk.dataset.rva;
-        const r=rvaRowMap[rv];
-        if(!r){ console.warn('RVA not found:',rv); return; }
-        // Dùng override nếu có, không thì dùng patch từ file
-        const patchBytes=PATCH_OVERRIDE[rv]||r.patch;
-        out.set(patchBytes, r.rva);
+        if(!rv) return;
+        const rvaInt=parseInt(rv,16);
+        if(isNaN(rvaInt)||rvaInt<=0||rvaInt>=patchArr2.length) return;
+
+        // Đọc 4 bytes từ patch tại RVA này
+        let b0=patchArr2[rvaInt],b1=patchArr2[rvaInt+1],b2=patchArr2[rvaInt+2],b3=patchArr2[rvaInt+3];
+
+        // Fix D5 → D6: C0 03 5F D5 = MSR (crash) → C0 03 5F D6 = RET
+        if(b0===0xC0 && b1===0x03 && b2===0x5F && b3===0xD5){
+            b3=0xD6;
+        }
+
+        out[rvaInt]=b0; out[rvaInt+1]=b1; out[rvaInt+2]=b2; out[rvaInt+3]=b3;
+
+        // Nếu patch dài hơn 4 bytes (MOV+RET = 8 bytes) thì copy thêm
+        // Kiểm tra bằng cách so sánh với gốc
+        const origArr2=new Uint8Array(origBuf);
+        let extraOff=4;
+        while(rvaInt+extraOff<patchArr2.length && rvaInt+extraOff<origArr2.length){
+            if(patchArr2[rvaInt+extraOff]===origArr2[rvaInt+extraOff]) break;
+            out[rvaInt+extraOff]=patchArr2[rvaInt+extraOff];
+            extraOff++;
+            if(extraOff>=32) break; // max 32 bytes per patch
+        }
+
         applied++;
     });
+
+    // Step 4: Copy __HOOK_TEXT, __HOOK_DATA (và các hook segment khác) từ patch
+    const patchArr=new Uint8Array(patchBuf);
+    hookSegs.forEach(s=>{
+        if(s.fo>0 && s.fsz>0 && s.fo+s.fsz<=patchArr.length){
+            // Copy segment data
+            const src=new Uint8Array(patchBuf, s.fo, s.fsz);
+            if(s.fo+s.fsz<=out.length){
+                out.set(src, s.fo);
+            }
+        }
+    });
+
+    // Done
     const blob=new Blob([out],{type:'application/octet-stream'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
@@ -938,10 +1051,10 @@ async function exportPatched2(){
     a.download=origName.replace(/(\.[^.]+)?$/,'_patched$1')||'patched_unity';
     a.click();
     URL.revokeObjectURL(url);
-    const t=document.getElementById('toast');
-    t.innerText=`✓ EXPORTED \${applied} PATCHES`;
-    t.className='show';
-    setTimeout(()=>{t.innerText='✓ COPIED';t.className=''},2500);
+
+    t2.innerText=`✓ EXPORTED ${applied} PATCHES + ${hookSegs.length} HOOK SEGS`;
+    t2.className='show';
+    setTimeout(()=>{t2.innerText='✓ COPIED';t2.className=''},3000);
 }
 </script>
 
