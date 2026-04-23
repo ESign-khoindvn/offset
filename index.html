@@ -914,12 +914,20 @@ async function exportPatched2(){
     rows2.forEach(r=>{ rvaRowMap[r.rva.toString(16).toUpperCase().padStart(8,'0')]=r; });
     const checks=document.querySelectorAll('.u2-chk');
     let applied=0;
+    // Known bad patches trong file — override fix trước khi write
+    const PATCH_OVERRIDE={
+        // 0x068EC16C: AnoSDK.InitEx bị patch C0035FD5 (sai) thay vì C0035FD6 (RET đúng)
+        '068EC16C': new Uint8Array([0xC0,0x03,0x5F,0xD6]),
+    };
+
     checks.forEach(chk=>{
         if(!chk.checked) return;
         const rv=chk.dataset.rva;
         const r=rvaRowMap[rv];
         if(!r){ console.warn('RVA not found:',rv); return; }
-        out.set(r.patch, r.rva);
+        // Dùng override nếu có, không thì dùng patch từ file
+        const patchBytes=PATCH_OVERRIDE[rv]||r.patch;
+        out.set(patchBytes, r.rva);
         applied++;
     });
     const blob=new Blob([out],{type:'application/octet-stream'});
