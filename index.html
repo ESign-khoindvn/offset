@@ -2,258 +2,790 @@
 
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RVA SCANNER PRO V8.5</title>
-    <style>
-        :root { --primary: #00ff41; --bg: #050a05; --card: #0d1a0d; --text: #d0ffd0; --cyan: #00e5ff; --lime: #ccff00; --red: #ff3e3e; --orange: #ff9100; --yellow: #ffee00; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        .container { max-width: 1100px; margin: auto; }
-        h1 { color: var(--primary); text-align: center; font-size: 18px; text-transform: uppercase; margin: 15px 0; letter-spacing: 2px; }
-        .upload-box { background: var(--card); padding: 20px; border-radius: 12px; border: 2px dashed #1b4b1b; text-align: center; margin-bottom: 15px; }
-        .btn-open { background: var(--primary); color: #000; padding: 10px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; display: inline-block; box-shadow: 0 0 15px rgba(0,255,65,0.3); font-size: 13px; }
-        #status { margin-top: 10px; font-size: 12px; color: var(--primary); font-weight: bold; }
-        #progress { margin-top: 5px; font-size: 11px; color: #4e8c4e; height: 16px; }
-        .stats-bar { display: flex; gap: 12px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
-        .stat-box { background: var(--card); border: 1px solid #1b4b1b; border-radius: 8px; padding: 7px 18px; font-size: 10px; text-align: center; }
-        .stat-box .val { color: var(--primary); font-size: 22px; font-weight: bold; display: block; }
-        .table-container { background: var(--card); border-radius: 12px; border: 1px solid #1b4b1b; overflow-x: auto; margin-bottom: 80px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        th { background: #132713; color: #4e8c4e; padding: 11px 10px; text-align: left; font-size: 10px; border-bottom: 1px solid #1b4b1b; position: sticky; top: 0; z-index: 10; }
-        td { padding: 9px 10px; border-bottom: 1px solid #0d200d; vertical-align: middle; }
-        .method-name { color: #80ffdf; font-weight: bold; display: block; font-size: 11.5px; }
-        .rva-cell { font-family: 'Courier New', monospace; color: #556655; font-weight: bold; font-size: 13px; cursor: default; background: #0d1a0d; padding: 6px 12px; border-radius: 4px; border: 1px solid #1b4b1b; text-align: center; display: inline-block; min-width: 115px; transition: all 0.2s; user-select: none; }
-        .rva-cell.found { color: #fff; cursor: pointer; background: #1a331a; border-color: #2d5a2d; }
-        .rva-cell.found:hover { background: var(--primary); color: #000; border-color: var(--primary); }
-        .rva-cell.found:active { transform: scale(0.97); }
-        .patch-box { font-family: 'Courier New', monospace; font-size: 10px; background: #000; padding: 7px 11px; border-radius: 6px; border: 1px solid #1b4b1b; display: inline-block; white-space: nowrap; }
-        .group-header td { font-weight: bold; font-size: 11px; padding: 9px 12px !important; }
-        .g-red td    { background: #200808; border-left: 4px solid var(--red);    color: var(--red) !important; }
-        .g-orange td { background: #1a1000; border-left: 4px solid var(--orange); color: var(--orange) !important; }
-        .g-yellow td { background: #151500; border-left: 4px solid var(--yellow); color: var(--yellow) !important; }
-        tr.updated td { background: rgba(0,255,65,0.04) !important; }
-        #toast { visibility: hidden; min-width: 160px; background: var(--primary); color: #000; text-align: center; border-radius: 8px; padding: 11px 20px; position: fixed; z-index: 99; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; font-size: 13px; }
-        #toast.show { visibility: visible; animation: fin 0.25s, fout 0.3s 1.4s forwards; }
-        @keyframes fin  { from{bottom:0;opacity:0} to{bottom:30px;opacity:1} }
-        @keyframes fout { from{opacity:1} to{opacity:0} }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BINARY PATCH TOOL</title>
+<style>
+:root {
+    --bg:#060810;--card:#0c1018;--border:#1a2030;
+    --primary:#00d4ff;--green:#00ff88;--red:#ff4466;
+    --orange:#ff9900;--yellow:#ffe000;--purple:#aa66ff;
+    --text:#c8d8e8;--muted:#4a6070;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* TABS */
+.tab-bar{display:flex;border-bottom:1px solid var(–border);background:#080c14;position:sticky;top:0;z-index:50}
+.tab{flex:1;padding:14px;text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:var(–muted);border-bottom:2px solid transparent;transition:all 0.2s}
+.tab.active{color:var(–primary);border-bottom-color:var(–primary);background:#0a1020}
+.tab-content{display:none;padding:20px;max-width:1300px;margin:auto}
+.tab-content.active{display:block}
+
+/* HEADER */
+.page-title{text-align:center;padding:20px 0 16px;font-size:20px;letter-spacing:4px;color:var(–primary);text-transform:uppercase}
+.page-sub{text-align:center;font-size:10px;color:var(–muted);letter-spacing:2px;margin-bottom:20px}
+
+/* UPLOAD */
+.upload-row{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.drop-zone{flex:1;min-width:200px;background:var(–card);border:2px dashed var(–border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(–primary);background:#0d1520}
+.drop-zone.loaded{border-color:var(–green);border-style:solid}
+.drop-zone .dz-icon{font-size:26px;margin-bottom:8px}
+.drop-zone .dz-label{font-size:10px;color:var(–muted);text-transform:uppercase;letter-spacing:1px}
+.drop-zone .dz-name{font-size:10px;color:var(–green);margin-top:6px;font-family:monospace;word-break:break-all}
+.drop-zone .dz-size{font-size:9px;color:var(–muted);margin-top:2px}
+.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+/* BUTTONS */
+.btn{display:inline-block;padding:11px 24px;border-radius:8px;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s}
+.btn-primary{background:linear-gradient(135deg,#0080aa,#0050cc);color:#fff;width:100%;display:block;margin-bottom:14px}
+.btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#00aadd,#0070ff)}
+.btn-primary:disabled{opacity:0.35;cursor:not-allowed}
+.btn-export{background:linear-gradient(135deg,#006633,#009944);color:#fff;padding:11px 20px;border-radius:8px;font-size:11px;font-weight:bold;letter-spacing:2px;cursor:pointer;border:none;display:none}
+.btn-export:hover{background:linear-gradient(135deg,#008844,#00bb55)}
+.btn-selall{font-size:10px;padding:5px 12px;border-radius:6px;background:#0a1820;border:1px solid var(–border);color:var(–muted);cursor:pointer;letter-spacing:1px}
+.btn-selall:hover{border-color:var(–primary);color:var(–primary)}
+
+/* PROGRESS */
+.prog-wrap{margin-bottom:14px;display:none}
+.prog-bg{background:var(–border);border-radius:4px;height:5px;overflow:hidden}
+.prog-fill{height:100%;background:var(–primary);border-radius:4px;transition:width 0.1s;width:0%}
+.prog-txt{font-size:10px;color:var(–muted);margin-top:5px;text-align:center}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;display:none}
+.stat-card{background:var(–card);border:1px solid var(–border);border-radius:9px;padding:12px;text-align:center}
+.stat-val{font-size:24px;font-weight:bold;display:block}
+.stat-lbl{font-size:9px;color:var(–muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+
+/* TABLE */
+.tbl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.tbl-title{font-size:12px;color:var(–primary);letter-spacing:2px;text-transform:uppercase}
+.filter-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.fbtn{font-size:9px;padding:4px 10px;border-radius:14px;cursor:pointer;border:1px solid var(–border);background:var(–card);color:var(–muted);text-transform:uppercase;letter-spacing:1px;transition:all 0.15s}
+.fbtn.active,.fbtn:hover{border-color:var(–primary);color:var(–primary)}
+
+.tbl-wrap{background:var(–card);border:1px solid var(–border);border-radius:10px;overflow:hidden;display:none}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead th{background:#090d14;color:var(–muted);padding:10px 10px;text-align:left;font-size:9px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(–border);position:sticky;top:42px;z-index:4}
+tbody tr{transition:background 0.1s}
+tbody tr:hover td{background:#0f1820!important}
+tbody tr+tr td{border-top:1px solid #0d1520}
+td{padding:9px 10px;vertical-align:middle}
+
+.chk{width:16px;height:16px;cursor:pointer;accent-color:var(–primary)}
+.rva-tag{font-family:‘Courier New’,monospace;font-size:12px;font-weight:bold;color:#fff;background:#0a1825;border:1px solid #1a3040;padding:4px 9px;border-radius:5px;cursor:pointer;display:inline-block;transition:all 0.15s;user-select:none;white-space:nowrap}
+.rva-tag:hover{background:var(–primary);color:#000;border-color:var(–primary)}
+.hex-box{font-family:‘Courier New’,monospace;font-size:9px;background:#000;padding:4px 8px;border-radius:4px;border:1px solid #1a2030;display:inline-block;white-space:nowrap}
+.ho{color:var(–red)}.hp{color:var(–green)}
+.type-badge{font-size:8px;padding:3px 7px;border-radius:9px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.t-ret  {background:#200a0a;color:var(–red);border:1px solid #400a0a}
+.t-b    {background:#0a1a0a;color:var(–green);border:1px solid #0a2a0a}
+.t-mov0 {background:#1a1000;color:var(–orange);border:1px solid #2a1800}
+.t-mov1 {background:#100a1a;color:var(–purple);border:1px solid #201030}
+.t-nop  {background:#0a0a1a;color:var(–primary);border:1px solid #0a0a2a}
+.t-other{background:#101010;color:var(–muted);border:1px solid #202020}
+.dis-txt{font-size:9px;color:#66ffaa;font-family:monospace}
+
+/* UNITY ANALYZER */
+.unity-result{display:none}
+.section-title{font-size:12px;color:var(–primary);letter-spacing:2px;text-transform:uppercase;margin:18px 0 10px;border-left:3px solid var(–primary);padding-left:10px}
+.func-card{background:var(–card);border:1px solid var(–border);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.func-head{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background 0.15s}
+.func-head:hover{background:#0f1820}
+.func-rva{font-family:monospace;font-size:12px;font-weight:bold;color:#fff;background:#0a1825;border:1px solid #1a3040;padding:3px 8px;border-radius:4px;cursor:pointer;flex-shrink:0}
+.func-rva:hover{background:var(–primary);color:#000}
+.func-name{font-size:11px;color:#80ffdf;font-weight:bold;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.func-type{flex-shrink:0}
+.func-sig{font-size:9px;color:var(–muted);font-family:monospace;padding:0 14px 10px;display:none}
+.func-sig.open{display:block}
+.func-purpose{font-size:10px;color:var(–yellow);padding:4px 14px 10px;display:none;border-top:1px solid var(–border);background:#0d1000}
+.func-purpose.open{display:block}
+
+.group-block{margin-bottom:18px}
+.group-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px}
+.gh-red   {background:#1a0505;border:1px solid #400a0a;color:var(–red)}
+.gh-orange{background:#120a00;border:1px solid #3a2000;color:var(–orange)}
+.gh-yellow{background:#111000;border:1px solid #2a2000;color:var(–yellow)}
+.gh-blue  {background:#050a12;border:1px solid #0a1a30;color:var(–primary)}
+.gh-purple{background:#0d0812;border:1px solid #1a1030;color:var(–purple)}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(–green);color:#000;padding:9px 20px;border-radius:7px;font-weight:bold;font-size:11px;z-index:200;visibility:hidden;white-space:nowrap}
+#toast.show{visibility:visible;animation:tf .2s,to .3s 1.3s forwards}
+@keyframes tf{from{opacity:0;bottom:5px}to{opacity:1;bottom:20px}}
+@keyframes to{to{opacity:0}}
+
+.empty-state{text-align:center;padding:50px;color:var(–muted);font-size:11px}
+</style>
+
 </head>
 <body>
-<div id="toast">✓ COPIED!</div>
-<div class="container">
-    <h1>⚡ RVA SCANNER PRO 8.5</h1>
+<div id="toast">✓ COPIED</div>
+
+<div class="tab-bar">
+    <div class="tab active" onclick="switchTab(0,this)">⚡ BINARY DIFF & PATCH</div>
+    <div class="tab" onclick="switchTab(1,this)">🎮 UNITY ANALYZER</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TAB 1 — BINARY DIFF & PATCH
+═══════════════════════════════════════════════════════════ -->
+
+<div class="tab-content active" id="tab0">
+    <div class="page-title">Binary Diff & Patch</div>
+    <div class="page-sub">Mach-O · PE · ARM64 · x86_64</div>
 
 ```
-<div class="stats-bar">
-    <div class="stat-box"><span class="val" id="s-found">0</span>FOUND</div>
-    <div class="stat-box"><span class="val">47</span>TOTAL</div>
-    <div class="stat-box"><span class="val" id="s-pct">0%</span>MATCH</div>
+<div class="upload-row">
+    <div class="drop-zone" id="dz1-orig" ondragover="dg(event,'1-orig')" ondragleave="ud('1-orig')" ondrop="dp(event,'1-orig')">
+        <div class="dz-icon">📁</div>
+        <div class="dz-label">File GỐC</div>
+        <div class="dz-name" id="fn1-orig">Kéo thả hoặc click</div>
+        <div class="dz-size" id="fs1-orig"></div>
+        <input type="file" id="f1-orig" onchange="lf('1-orig')">
+    </div>
+    <div class="drop-zone" id="dz1-patch" ondragover="dg(event,'1-patch')" ondragleave="ud('1-patch')" ondrop="dp(event,'1-patch')">
+        <div class="dz-icon">🔧</div>
+        <div class="dz-label">File PATCH</div>
+        <div class="dz-name" id="fn1-patch">Kéo thả hoặc click</div>
+        <div class="dz-size" id="fs1-patch"></div>
+        <input type="file" id="f1-patch" onchange="lf('1-patch')">
+    </div>
 </div>
 
-<div class="upload-box">
-    <label class="btn-open">📂 CHỌN FILE DUMP.CS
-        <input type="file" id="fIn" style="display:none" accept=".cs,.txt" onchange="run()"/>
-    </label>
-    <div id="status">⏳ CHỜ TỆP DUMP.CS...</div>
-    <div id="progress"></div>
+<button class="btn btn-primary" id="btn1-go" disabled onclick="analyze1()">🔍 PHÂN TÍCH</button>
+
+<div class="prog-wrap" id="prog1">
+    <div class="prog-bg"><div class="prog-fill" id="pf1"></div></div>
+    <div class="prog-txt" id="pt1">...</div>
 </div>
 
-<div class="table-container">
+<div class="stats-grid" id="sg1">
+    <div class="stat-card"><span class="stat-val" style="color:var(--primary)" id="s1-tot">0</span><div class="stat-lbl">Tổng patch</div></div>
+    <div class="stat-card"><span class="stat-val" style="color:var(--red)"    id="s1-ret">0</span><div class="stat-lbl">RET killed</div></div>
+    <div class="stat-card"><span class="stat-val" style="color:var(--green)"  id="s1-b">0</span><div class="stat-lbl">B Hook</div></div>
+    <div class="stat-card"><span class="stat-val" style="color:var(--orange)" id="s1-m0">0</span><div class="stat-lbl">MOV #0</div></div>
+    <div class="stat-card"><span class="stat-val" style="color:var(--purple)" id="s1-m1">0</span><div class="stat-lbl">MOV #1</div></div>
+    <div class="stat-card"><span class="stat-val" style="color:var(--primary)"id="s1-nop">0</span><div class="stat-lbl">NOP</div></div>
+    <div class="stat-card"><span class="stat-val" style="color:var(--muted)"  id="s1-sz">-</span><div class="stat-lbl">Size diff</div></div>
+</div>
+
+<div class="tbl-header" style="display:none" id="tbl1-hdr">
+    <div class="tbl-title" id="tbl1-title">PATCH LIST</div>
+    <div class="filter-row">
+        <button class="btn-selall" onclick="selAll1(true)">☑ ALL</button>
+        <button class="btn-selall" onclick="selAll1(false)">☐ NONE</button>
+        &nbsp;
+        <div class="fbtn active" onclick="filt1('all',this)">ALL</div>
+        <div class="fbtn" onclick="filt1('ret',this)">RET</div>
+        <div class="fbtn" onclick="filt1('b',this)">B HOOK</div>
+        <div class="fbtn" onclick="filt1('mov0',this)">MOV#0</div>
+        <div class="fbtn" onclick="filt1('mov1',this)">MOV#1</div>
+        <div class="fbtn" onclick="filt1('nop',this)">NOP</div>
+        <div class="fbtn" onclick="filt1('other',this)">OTHER</div>
+        &nbsp;
+        <button class="btn-export" id="btn-export" onclick="exportPatched()">💾 EXPORT PATCHED FILE</button>
+    </div>
+</div>
+
+<div class="tbl-wrap" id="tbl1-wrap">
     <table>
         <thead>
             <tr>
-                <th style="width:32%">FUNCTION</th>
-                <th style="width:20%">RVA (CLICK TO COPY)</th>
-                <th>PATCH BYTES</th>
+                <th style="width:36px"><input type="checkbox" class="chk" id="chk-master" onchange="masterChk(this)"></th>
+                <th>#</th><th>RVA</th><th>TYPE</th><th>SIZE</th>
+                <th>ORIGINAL</th><th>PATCHED</th><th>DISASM</th>
             </tr>
         </thead>
-        <tbody id="list"></tbody>
+        <tbody id="tb1"></tbody>
     </table>
 </div>
 ```
 
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════
+     TAB 2 — UNITY ANALYZER
+═══════════════════════════════════════════════════════════ -->
+
+<div class="tab-content" id="tab1">
+    <div class="page-title">Unity IL2CPP Analyzer</div>
+    <div class="page-sub">Binary diff + dump.cs lookup + phân tích công dụng</div>
+
+```
+<div class="upload-row">
+    <div class="drop-zone" id="dz2-orig" ondragover="dg(event,'2-orig')" ondragleave="ud('2-orig')" ondrop="dp(event,'2-orig')">
+        <div class="dz-icon">📁</div>
+        <div class="dz-label">UnityFramework GỐC</div>
+        <div class="dz-name" id="fn2-orig">Kéo thả hoặc click</div>
+        <div class="dz-size" id="fs2-orig"></div>
+        <input type="file" id="f2-orig" onchange="lf('2-orig')">
+    </div>
+    <div class="drop-zone" id="dz2-patch" ondragover="dg(event,'2-patch')" ondragleave="ud('2-patch')" ondrop="dp(event,'2-patch')">
+        <div class="dz-icon">🔧</div>
+        <div class="dz-label">UnityFramework PATCH</div>
+        <div class="dz-name" id="fn2-patch">Kéo thả hoặc click</div>
+        <div class="dz-size" id="fs2-patch"></div>
+        <input type="file" id="f2-patch" onchange="lf('2-patch')">
+    </div>
+    <div class="drop-zone" id="dz2-dump" ondragover="dg(event,'2-dump')" ondragleave="ud('2-dump')" ondrop="dp(event,'2-dump')">
+        <div class="dz-icon">📄</div>
+        <div class="dz-label">dump.cs</div>
+        <div class="dz-name" id="fn2-dump">Kéo thả hoặc click</div>
+        <div class="dz-size" id="fs2-dump"></div>
+        <input type="file" id="f2-dump" accept=".cs,.txt" onchange="lf('2-dump')">
+    </div>
+</div>
+
+<button class="btn btn-primary" id="btn2-go" disabled onclick="analyze2()">🔍 PHÂN TÍCH UNITY</button>
+
+<div class="prog-wrap" id="prog2">
+    <div class="prog-bg"><div class="prog-fill" id="pf2"></div></div>
+    <div class="prog-txt" id="pt2">...</div>
+</div>
+
+<div class="unity-result" id="unity-result"></div>
+```
+
+</div>
+
 <script>
-// ─── ENTRY FORMAT ─────────────────────────────────────────────────────────────
-// [id, displayName, sig_to_match, requireClass, group, patchHex, patchColor]
-// sig_to_match  : substring cần có trong dòng method signature
-// requireClass  : tên class phải match (null = bất kỳ)
-const ENTRIES = [
-    // 🔴 AnoSDK
-    ["ano_initex",    "AnoSDK.InitEx",              "public static void InitEx(int gameId",             "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
-    ["ano_sdkinitex", "AnoSDK.AnoSDKInitEx",         "AnoSDKInitEx(int gameID",                          "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
-    ["ano_resume",    "AnoSDK.AnoSDKOnResume",        "AnoSDKOnResume()",                                 "AnoSDK",             "red",    "00 00 80 D2  C0 03 5F D6",              "cyan"],
-    ["ano_delreport", "AnoSDK.AnoSDKDelReportData4",  "AnoSDKDelReportData4(",                            "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
-    ["ano_free",      "AnoSDK.AnoSDKFree",            "AnoSDKFree(",                                      "AnoSDK",             "red",    "C0 03 5F D6",                          ""],
-    // 🔴 LSynchrReport
-    ["sync_reset",    "LSynchrReport.Reset",          "public void Reset()",                              "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
-    ["sync_close",    "LSynchrReport.CloseUpload",    "private void CloseUpload()",                       "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
-    ["sync_notify",   "LSynchrReport.OnNotifyHash",   "OnNotifyHashCheckUnsyncByDs(",                     "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
-    ["sync_deque",    "LSynchrReport.DequeHash",      "DequeHashValueByFrameNum(",                        "LSynchrReport",      "red",    "C0 03 5F D6",                          ""],
-    // 🔴 LFrameSyncBattleLogic
-    ["fs_revive",     "LFrameSync.OnActorRevive",     "private void OnActorRevive(ref LDefaultGame",      "LFrameSyncBattleLogic","red",   "C0 03 5F D6",                          ""],
-    ["fs_hash",       "LFrameSync.CalcuBattleHash",   "CalcuBattleHash()",                                "LFrameSyncBattleLogic","red",   "C0 03 5F D6",                          ""],
-    ["fs_sample",     "LFrameSync.SampleSendFrame",   "SampleAndSendFrameSyncData(",                      "LFrameSyncBattleLogic","red",   "C0 03 5F D6",                          ""],
-    // 🟠 BattleStatistic
-    ["bs_isreport",   "Stat.IsNeedReport",            "IsNeedReportCompetitionData()",                    "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
-    ["bs_resetcheet", "Stat.ResetCheet [B HOOK]",     "ResetCheetCommandSetWarmBattleResultInfo()",       "BattleStatistic",    "orange", "F1 7F 04 90  31 E2 02 91  20 02 1F D6","lime"],
-    ["bs_petdata",    "Stat.CreatePetData",           "CreatePetData(uint playerId",                      "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
-    ["bs_dragon",     "Stat.CreateDragonInfo",        "CreateDragonStatistInfo(",                         "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
-    ["bs_shenfu",     "Stat.GeneralShenFu",           "GeneralShenFuData(",                               "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
-    ["bs_verify",     "Stat.VerifyCondition",         "VerifyCondition(IStarCondition",                   "BattleStatistic",    "orange", "C0 03 5F D6",                          ""],
-    // 🟠 Apollo
-    ["ap_reportopen", "Apollo.ReportEventOpenApp",    "ReportEventOpenApp(",                              "ApolloEventReport",  "orange", "C0 03 5F D6",                          ""],
-    ["ap_addcache",   "Apollo.AddCacheReport",        "AddCacheReport(string eventName",                  null,                 "orange", "C0 03 5F D6",                          ""],
-    ["ap_onlogin",    "Apollo.OnLogin",               "OnLogin(GCloudChannel platform",                   null,                 "orange", "C0 03 5F D6",                          ""],
-    // 🟠 Firebase
-    ["fb_tryreport",  "Firebase.TryReportInfo",       "public static void TryReportInfo()",               "FirebasePush",       "orange", "C0 03 5F D6",                          ""],
-    ["fb_reportinfo", "Firebase.reportInfo",          "private static void reportInfo()",                 "FirebasePush",       "orange", "C0 03 5F D6",                          ""],
-    ["fb_getpush",    "Firebase.GetPushExtra",        "GetPushExtraDictObjects(",                         "FirebasePush",       "orange", "C0 03 5F D6",                          ""],
-    // 🟠 Lobby
-    ["lb_skipguide",  "Lobby.TrySkipGuideLevel1",     "TrySkipGuideLevel1()",                             "LobbyMsgHandler",    "orange", "C0 03 5F D6",                          ""],
-    ["lb_security",   "Lobby.onTriggerSecurity",      "onTriggerSecurityDataReport(",                     "LobbyMsgHandler",    "orange", "C0 03 5F D6",                          ""],
-    // 🟠 Settlement
-    ["st_cache",      "Settlement.cacheGameInfo",     "public void cacheGameInfoData()",                  "SettlementSystem",   "orange", "C0 03 5F D6",                          ""],
-    ["st_report",     "Settlement.ReportTLog",        "ReportTLogDataToLobby(",                           "SettlementSystem",   "orange", "C0 03 5F D6",                          ""],
-    ["st_matchblack", "Settlement.AddMatchBlack",     "CommonOnRequestAddMatchBlack(",                    "SettlementSystem",   "orange", "C0 03 5F D6",                          ""],
-    // 🟡 CChat
-    ["cc_ntf",        "CChat.OnChatNTFMain",          "CChatNetUT_On_Chat_NTFMainThread(",                null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["cc_compntf",    "CChat.OnComplaintNTF",         "CChatNetUT_On_Chat_Complaint_NTF(",                null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["cc_comprsp",    "CChat.OnComplaintRSP",         "CChatNetUT_On_Chat_Complaint_RSP(",                null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["cc_rspregion",  "CChat.RspSetRegion",           "public static void RspSetChatRegion(",             null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["cc_compntf2",   "CChat.ComplaintNTF (V2)",      "public static void On_Chat_Complaint_NTF(",        null,                 "yellow", "C0 03 5F D6",                          ""],
-    // 🟡 InBattle
-    ["ib_loading",    "InBattle.LoadingChat",         "Send_Loaidng_Chat(",                               null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["ib_translate",  "InBattle.TranslateChat",       "SendInBattleMsg_TranslateChat(",                   null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["ib_preconfig",  "InBattle.PreConfig",           "SendInBattleMsg_PreConfig(",                       null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["ib_inputchat",  "InBattle.InputChat",           "OnSendInBattleMsg_InputChat(",                     null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["ib_complaint",  "InBattle.ChatComplaint",       "SendInBattleMsg_ChatComplaint(ulong id",           null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["hd_likechat1",  "LGameBuilder.Handle_LikeChat", "Handle_SendSendInLoaing_LikeChat(",                "LGameBuilder",       "yellow", "C0 03 5F D6",                          ""],
-    ["hd_comp1",      "LGameBuilder.Handle_Complaint","private void Handle_SendInBattleMsg_ChatComplaint","LGameBuilder",       "yellow", "C0 03 5F D6",                          ""],
-    ["hd_likechat2",  "LStateSync.Handle_LikeChat",   "Handle_SendSendInLoaing_LikeChat(",                "LStateSyncMsgHandler","yellow","C0 03 5F D6",                          ""],
-    ["hd_comp2",      "LStateSync.Handle_Complaint",  "Handle_SendInBattleMsg_ChatComplaint(",            "LStateSyncMsgHandler","yellow","C0 03 5F D6",                          ""],
-    ["gb_chatntf",    "Builder.Handle_ChatNTF",       "private void Handle_On_Chat_NTF(",                 null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["gb_compntf",    "Builder.Handle_ComplaintNTF",  "Handle_On_ChatComplaint_NTF(",                     null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["gb_comprsp",    "Builder.Handle_ComplaintRSP",  "Handle_On_ChatComplaint_RSP(",                     null,                 "yellow", "C0 03 5F D6",                          ""],
-    ["relay_voice",   "Relay.VoiceComplaintRSP",      "On_ChatRealtimeVoice_Complaint_RSP(",              null,                 "yellow", "C0 03 5F D6",                          ""],
-];
+// ═══════════════════════════════════════════════════════════════════════════════
+// SHARED UTILS
+// ═══════════════════════════════════════════════════════════════════════════════
+const FILES = {};
 
-const GROUP_META = {
-    red:    "🔴 AnoSDK & FRAME SYNC INTEGRITY",
-    orange: "🟠 STATISTICS & TELEMETRY REPORT",
-    yellow: "🟡 CHAT & COMPLAINT SYSTEM",
-};
+function switchTab(idx, el) {
+    document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+    document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===idx));
+}
 
-// ─── BUILD TABLE ──────────────────────────────────────────────────────────────
-const tbody = document.getElementById('list');
-let lastGrp = '';
-ENTRIES.forEach(([id, name,,,grp, patch, pcolor]) => {
-    if (grp !== lastGrp) {
-        const hdr = document.createElement('tr');
-        hdr.className = `group-header g-${grp}`;
-        hdr.innerHTML = `<td colspan="3">${GROUP_META[grp]}</td>`;
-        tbody.appendChild(hdr);
-        lastGrp = grp;
-    }
-    const tr = document.createElement('tr');
-    tr.id = `row-${id}`;
-    const pstyle = pcolor === 'cyan' ? 'color:var(--cyan)' : pcolor === 'lime' ? 'color:var(--lime)' : 'color:#fff';
-    tr.innerHTML = `
-        <td><span class="method-name">${name}</span></td>
-        <td><div class="rva-cell" id="rva-${id}" onclick="copyRVA(this)">...</div></td>
-        <td><div class="patch-box" style="${pstyle}">${patch}</div></td>`;
-    tbody.appendChild(tr);
-});
+function lf(key) {
+    const f = document.getElementById(`f${key.replace('-','')}`).files[0];
+    if (!f) return;
+    FILES[key] = f;
+    document.getElementById(`fn${key.replace('-','')}`).innerText = f.name;
+    document.getElementById(`fs${key.replace('-','')}`).innerText = fmtSz(f.size);
+    document.getElementById(`dz${key.replace('-','')}`).classList.add('loaded');
+    updateBtns();
+}
+// fix id selector
+function lf(key) {
+    const inp = document.getElementById('f'+key.split('-').join('-'));
+    // use correct IDs
+    const f = document.getElementById('f'+key).files[0];
+    if (!f) return;
+    FILES[key] = f;
+    document.getElementById('fn'+key).innerText = f.name;
+    document.getElementById('fs'+key).innerText = fmtSz(f.size);
+    document.getElementById('dz'+key).classList.add('loaded');
+    updateBtns();
+}
 
-// ─── COPY ─────────────────────────────────────────────────────────────────────
-function copyRVA(cell) {
-    if (!cell.classList.contains('found')) return;
-    navigator.clipboard.writeText(cell.innerText).then(() => {
-        const t = document.getElementById("toast");
-        t.className = "show";
-        setTimeout(() => t.className = "", 1800);
+function dg(e,k){e.preventDefault();document.getElementById('dz'+k).classList.add('drag')}
+function ud(k){document.getElementById('dz'+k).classList.remove('drag')}
+function dp(e,k){
+    e.preventDefault();ud(k);
+    const f=e.dataTransfer.files[0];if(!f)return;
+    FILES[k]=f;
+    document.getElementById('fn'+k).innerText=f.name;
+    document.getElementById('fs'+k).innerText=fmtSz(f.size);
+    document.getElementById('dz'+k).classList.add('loaded');
+    updateBtns();
+}
+
+function updateBtns(){
+    document.getElementById('btn1-go').disabled=!(FILES['1-orig']&&FILES['1-patch']);
+    document.getElementById('btn2-go').disabled=!(FILES['2-orig']&&FILES['2-patch']&&FILES['2-dump']);
+}
+
+function fmtSz(n){return n>1048576?(n/1048576).toFixed(1)+' MB':(n/1024).toFixed(1)+' KB'}
+
+function readBuf(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.onerror=j;rd.readAsArrayBuffer(f)})}
+function readTxt(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.onerror=j;rd.readAsText(f,'utf-8')})}
+function tick(){return new Promise(r=>setTimeout(r,0))}
+
+function setP(id,pct,txt){
+    document.getElementById('pf'+id).style.width=pct+'%';
+    document.getElementById('pt'+id).innerText=txt;
+}
+
+function copyTxt(txt){
+    navigator.clipboard.writeText(txt).then(()=>{
+        const t=document.getElementById('toast');
+        t.className='show';setTimeout(()=>t.className='',1700);
     });
 }
 
-// ─── SCANNER ──────────────────────────────────────────────────────────────────
-async function run() {
-    const file = document.getElementById('fIn').files[0];
-    if (!file) return;
+// ═══════════════════════════════════════════════════════════════════════════════
+// MACH-O RANGE
+// ═══════════════════════════════════════════════════════════════════════════════
+function getMachoRange(arr){
+    const dv=new DataView(arr.buffer);
+    if(dv.getUint32(0,true)!==0xFEEDFACF) return {start:0x4000,end:arr.length};
+    const ncmds=dv.getUint32(16,true);
+    let off=32,ts=0x4000,be=arr.length;
+    const KNOWN=['__TEXT','__DATA','__DATA_CONST','__DATA_DIRTY','__OBJC','__AUTH','__AUTH_CONST',''];
+    for(let i=0;i<ncmds;i++){
+        const cmd=dv.getUint32(off,true),csz=dv.getUint32(off+4,true);
+        if(cmd===0x19){
+            const sn=gstr(arr,off+8,16);
+            const fo=Number(dv.getBigUint64(off+40,true));
+            if(sn==='__TEXT'){
+                const ns=dv.getUint32(off+56,true);
+                for(let s=0;s<ns;s++){
+                    const sb=off+72+s*80;
+                    if(gstr(arr,sb,16)==='__text') ts=dv.getUint32(sb+48,true);
+                }
+            }
+            if(!KNOWN.includes(sn)&&fo>0&&fo<be) be=fo;
+        }
+        off+=csz;
+    }
+    return {start:ts,end:Math.min(be,arr.length)};
+}
+function gstr(arr,off,len){let s='';for(let i=0;i<len;i++){if(arr[off+i]===0)break;s+=String.fromCharCode(arr[off+i])}return s}
 
-    // reset
-    ENTRIES.forEach(([id]) => {
-        const cell = document.getElementById(`rva-${id}`);
-        cell.innerText = '...';
-        cell.classList.remove('found');
-        document.getElementById(`row-${id}`).classList.remove('updated');
+// ═══════════════════════════════════════════════════════════════════════════════
+// DIFF ENGINE
+// ═══════════════════════════════════════════════════════════════════════════════
+async function diffFiles(origArr,patchArr,start,end,onP){
+    const CHUNK=2*1024*1024;
+    end=Math.min(end,origArr.length,patchArr.length);
+    const diffs=[];
+    for(let pos=start;pos<end;){
+        const ce=Math.min(pos+CHUNK,end);
+        let i=pos;
+        while(i<ce){
+            if(origArr[i]!==patchArr[i]){
+                const s=i,ob=[],nb=[];
+                while(i<ce&&origArr[i]!==patchArr[i]){ob.push(origArr[i]);nb.push(patchArr[i]);i++}
+                const o=new Uint8Array(ob),n=new Uint8Array(nb);
+                if(diffs.length&&s===diffs[diffs.length-1].rva+diffs[diffs.length-1].orig.length){
+                    const l=diffs[diffs.length-1];
+                    const co=new Uint8Array(l.orig.length+o.length);co.set(l.orig);co.set(o,l.orig.length);l.orig=co;
+                    const cn=new Uint8Array(l.patch.length+n.length);cn.set(l.patch);cn.set(n,l.patch.length);l.patch=cn;
+                } else diffs.push({rva:s,orig:o,patch:n});
+            } else i++;
+        }
+        pos=ce;
+        onP((pos-start)/(end-start));
+        await tick();
+    }
+    return diffs;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CLASSIFY
+// ═══════════════════════════════════════════════════════════════════════════════
+const RET=[0xC0,0x03,0x5F,0xD6],NOP=[0x1F,0x20,0x03,0xD5];
+const MW00=[0x00,0x00,0x80,0x52],MW01=[0x20,0x00,0x80,0x52];
+const MX00=[0x00,0x00,0x80,0xD2],MX01=[0x20,0x00,0x80,0xD2];
+const eq4=(a,p)=>a.length>=4&&a[0]===p[0]&&a[1]===p[1]&&a[2]===p[2]&&a[3]===p[3];
+const sw=(a,p)=>{for(let i=0;i<p.length;i++)if(a[i]!==p[i])return false;return true};
+
+function classify(d){
+    const p=d.patch;
+    let type='other',lbl='OTHER',cls='t-other',dis='';
+    if(eq4(p,RET)){type='ret';lbl='RET';cls='t-ret';dis='ret'}
+    else if(eq4(p,NOP)){type='nop';lbl='NOP';cls='t-nop';dis='nop'}
+    else if(p.length>=8&&sw(p,MW00)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3])
+        {type='mov0';lbl='MOV w0,#0';cls='t-mov0';dis='mov w0,#0 / ret'}
+    else if(p.length>=8&&sw(p,MX00)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3])
+        {type='mov0';lbl='MOV x0,#0';cls='t-mov0';dis='mov x0,#0 / ret'}
+    else if(p.length>=8&&sw(p,MW01)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3])
+        {type='mov1';lbl='MOV w0,#1';cls='t-mov1';dis='mov w0,#1 / ret'}
+    else if(p.length>=8&&sw(p,MX01)&&p[4]===RET[0]&&p[5]===RET[1]&&p[6]===RET[2]&&p[7]===RET[3])
+        {type='mov1';lbl='MOV x0,#1';cls='t-mov1';dis='mov x0,#1 / ret'}
+    else if(p.length===4){
+        const v=(p[3]<<24|p[2]<<16|p[1]<<8|p[0])>>>0;
+        if((v&0xFC000000)===0x14000000){
+            let im=v&0x3FFFFFF;if(im&0x2000000)im-=0x4000000;
+            const tgt=(d.rva+im*4)>>>0;
+            type='b';lbl='B HOOK';cls='t-b';dis=`b 0x${tgt.toString(16).toUpperCase().padStart(8,'0')}`;
+        }
+    } else if(p.length>=12){
+        const v0=(p[3]<<24|p[2]<<16|p[1]<<8|p[0])>>>0;
+        if((v0&0x9F000000)===0x90000000||(v0&0x9F000000)===0xB0000000||(v0&0x9F000000)===0xD0000000)
+            {type='b';lbl='TRAMPOLINE';cls='t-b';dis='adrp/add/br (hook trampoline)'}
+    }
+    return {...d,type,lbl,cls,dis};
+}
+
+function toHex(arr,mx){
+    const a=Array.from(arr).slice(0,mx).map(b=>b.toString(16).toUpperCase().padStart(2,'0')).join(' ');
+    return arr.length>mx?a+'…':a;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TAB 1 — ANALYZE
+// ═══════════════════════════════════════════════════════════════════════════════
+let rows1=[];
+let rows2=[];
+
+async function analyze1(){
+    document.getElementById('btn1-go').disabled=true;
+    document.getElementById('prog1').style.display='block';
+    document.getElementById('sg1').style.display='none';
+    document.getElementById('tbl1-wrap').style.display='none';
+    document.getElementById('tbl1-hdr').style.display='none';
+    document.getElementById('btn-export').style.display='none';
+    rows1=[];
+
+    setP(1,0,'Đang đọc file...');
+    const ob=await readBuf(FILES['1-orig']);
+    setP(1,25,'Đang đọc patch...');
+    const pb=await readBuf(FILES['1-patch']);
+    const oa=new Uint8Array(ob),pa=new Uint8Array(pb);
+
+    setP(1,40,'Phân tích header...');
+    const {start,end}=getMachoRange(oa);
+    setP(1,45,`Scan: 0x${start.toString(16).toUpperCase()} → 0x${end.toString(16).toUpperCase()}`);
+
+    const diffs=await diffFiles(oa,pa,start,end,p=>setP(1,45+Math.round(p*45),`Diff... ${Math.round(p*100)}%`));
+    rows1=diffs.map(classify);
+
+    setP(1,100,'Xong!');
+    setTimeout(()=>{
+        document.getElementById('prog1').style.display='none';
+        renderStats1(oa.length,pa.length);
+        renderTable1();
+        document.getElementById('btn1-go').disabled=false;
+    },250);
+}
+
+function renderStats1(os,ps){
+    const c=t=>rows1.filter(r=>r.type===t).length;
+    document.getElementById('s1-tot').innerText=rows1.length;
+    document.getElementById('s1-ret').innerText=c('ret');
+    document.getElementById('s1-b').innerText=c('b');
+    document.getElementById('s1-m0').innerText=c('mov0');
+    document.getElementById('s1-m1').innerText=c('mov1');
+    document.getElementById('s1-nop').innerText=c('nop');
+    const d=ps-os;
+    document.getElementById('s1-sz').innerText=(d>=0?'+':'')+fmtSz(Math.abs(d));
+    document.getElementById('sg1').style.display='grid';
+}
+
+function renderTable1(){
+    const tb=document.getElementById('tb1');
+    document.getElementById('tbl1-title').innerText=`PATCH LIST — ${rows1.length} LOCATION`;
+    if(!rows1.length){tb.innerHTML=`<tr><td colspan="8"><div class="empty-state">Không tìm thấy diff</div></td></tr>`;return}
+    const f=document.createDocumentFragment();
+    rows1.forEach((r,i)=>{
+        const tr=document.createElement('tr');
+        tr.dataset.type=r.type;
+        const rv=r.rva.toString(16).toUpperCase().padStart(8,'0');
+        tr.innerHTML=`
+        <td><input type="checkbox" class="chk row-chk" checked onchange="updateExportBtn()"></td>
+        <td style="color:var(--muted);font-size:9px">${i+1}</td>
+        <td><div class="rva-tag" onclick="copyTxt('${rv}')">${rv}</div></td>
+        <td><span class="type-badge ${r.cls}">${r.lbl}</span></td>
+        <td style="color:var(--muted);font-size:9px">${r.orig.length}B</td>
+        <td><div class="hex-box ho">${toHex(r.orig,10)}</div></td>
+        <td><div class="hex-box hp">${toHex(r.patch,10)}</div></td>
+        <td><span class="dis-txt">${r.dis||toHex(r.patch,6)}</span></td>`;
+        f.appendChild(tr);
     });
-    document.getElementById('s-found').innerText = '0';
-    document.getElementById('s-pct').innerText = '0%';
-    document.getElementById('status').innerText = '🔍 ĐANG QUÉT: ' + file.name.toUpperCase();
+    tb.innerHTML='';tb.appendChild(f);
+    document.getElementById('tbl1-wrap').style.display='block';
+    document.getElementById('tbl1-hdr').style.display='flex';
+    document.getElementById('btn-export').style.display='inline-block';
+}
 
-    const found = {};          // id -> rva string
-    const reader = file.stream().getReader();
-    const decoder = new TextDecoder('utf-8');
-    let partial = '';
-    let lastRVA = '';
-    let currentClass = '';
-    let bytesRead = 0;
-    const total = file.size;
+function filt1(type,btn){
+    document.querySelectorAll('#tab0 .fbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#tb1 tr[data-type]').forEach(tr=>{
+        tr.style.display=(type==='all'||tr.dataset.type===type)?'':'none';
+    });
+}
 
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        bytesRead += value.byteLength;
+function selAll1(v){
+    document.querySelectorAll('.row-chk').forEach(c=>{
+        if(c.closest('tr').style.display!=='none') c.checked=v;
+    });
+    updateExportBtn();
+}
+function masterChk(el){selAll1(el.checked)}
+function updateExportBtn(){
+    const n=document.querySelectorAll('.row-chk:checked').length;
+    document.getElementById('btn-export').innerText=`💾 EXPORT (${n} patch)`;
+}
 
-        const chunk = partial + decoder.decode(value, { stream: true });
-        const lines = chunk.split(/\r?\n/);
-        partial = lines.pop();
+// ═══════════════════════════════════════════════════════════════════════════════
+// EXPORT PATCHED FILE
+// ═══════════════════════════════════════════════════════════════════════════════
+async function exportPatched(){
+    const origBuf=await readBuf(FILES['1-orig']);
+    const out=new Uint8Array(origBuf.slice(0));
+    const checks=document.querySelectorAll('.row-chk');
+    let applied=0;
+    checks.forEach((chk,i)=>{
+        if(!chk.checked) return;
+        const r=rows1[i];
+        out.set(r.patch, r.rva);
+        applied++;
+    });
+    const blob=new Blob([out],{type:'application/octet-stream'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=FILES['1-orig'].name.replace(/(\.[^.]+)?$/,'_patched$1')||'patched_file';
+    a.click();
+    URL.revokeObjectURL(url);
+    copyTxt('');
+    const t=document.getElementById('toast');
+    t.innerText=`✓ EXPORTED ${applied} PATCHES`;
+    t.className='show';setTimeout(()=>{t.innerText='✓ COPIED';t.className=''},2000);
+}
 
-        for (const raw of lines) {
-            const line = raw.trim();
-            if (!line) continue;
+// ═══════════════════════════════════════════════════════════════════════════════
+// TAB 2 — UNITY ANALYZER
+// ═══════════════════════════════════════════════════════════════════════════════
+async function analyze2(){
+    document.getElementById('btn2-go').disabled=true;
+    document.getElementById('prog2').style.display='block';
+    document.getElementById('unity-result').style.display='none';
 
-            // track class
-            const cm = line.match(/^(?:public|private|internal|protected|sealed|abstract).*?\bclass\s+(\w+)/);
-            if (cm) { currentClass = cm[1]; continue; }
+    setP(2,0,'Đang đọc file gốc...');
+    const ob=await readBuf(FILES['2-orig']);
+    setP(2,15,'Đang đọc file patch...');
+    const pb=await readBuf(FILES['2-patch']);
+    const oa=new Uint8Array(ob),pa=new Uint8Array(pb);
 
-            // extract RVA — parse int + pad 8 chars tránh lệch leading zero
-            const rm = line.match(/\/\/\s*RVA:\s*0x([0-9A-Fa-f]+)/i);
-            if (rm) {
-                lastRVA = parseInt(rm[1], 16).toString(16).toUpperCase().padStart(8, '0');
-                continue;
-            }
+    setP(2,25,'Đang diff binary...');
+    const {start,end}=getMachoRange(oa);
+    const diffs=await diffFiles(oa,pa,start,end,p=>setP(2,25+Math.round(p*35),`Diff... ${Math.round(p*100)}%`));
+    const rows=diffs.map(classify);
 
-            // match each entry
-            for (const [id, , sig, reqClass] of ENTRIES) {
-                if (found[id]) continue;                          // đã tìm được rồi
-                if (!line.includes(sig)) continue;               // sig không có trong dòng này
-                if (reqClass && currentClass !== reqClass) continue; // sai class
-                if (!lastRVA) continue;                          // chưa có RVA
+    setP(2,62,'Đang đọc dump.cs...');
+    await tick();
+    const dumpTxt=await readTxt(FILES['2-dump']);
 
-                found[id] = lastRVA;
-                const cell = document.getElementById(`rva-${id}`);
-                cell.innerText = lastRVA;
-                cell.classList.add('found');
-                document.getElementById(`row-${id}`).classList.add('updated');
+    setP(2,68,'Đang parse dump.cs...');
+    await tick();
+    const rvaMap=await parseDump(dumpTxt, rows.map(r=>r.rva), p=>setP(2,68+Math.round(p*25),`Parse dump... ${Math.round(p*100)}%`));
 
-                const cnt = Object.keys(found).length;
-                document.getElementById('s-found').innerText = cnt;
-                document.getElementById('s-pct').innerText = Math.round(cnt / 47 * 100) + '%';
-            }
+    setP(2,94,'Đang render kết quả...');
+    await tick();
+    rows2=rows;
+    renderUnity(rows, rvaMap, oa.length, pa.length);
+
+    setP(2,100,'Hoàn tất!');
+    setTimeout(()=>{
+        document.getElementById('prog2').style.display='none';
+        document.getElementById('unity-result').style.display='block';
+        document.getElementById('btn2-go').disabled=false;
+    },250);
+}
+
+// ─── PARSE DUMP.CS ────────────────────────────────────────────────────────────
+async function parseDump(txt, rvaList, onP){
+    const targetSet=new Set(rvaList);
+    const result={};
+    const lines=txt.split(/\r?\n/);
+    let curClass='Unknown', lastRVA=null;
+    const total=lines.length;
+
+    for(let i=0;i<total;i++){
+        if(i%50000===0){onP(i/total);await tick()}
+        const line=lines[i].trim();
+        if(!line) continue;
+
+        const cm=line.match(/^(?:public|private|internal|protected|sealed|abstract).*?\bclass\s+(\w+)/);
+        if(cm){curClass=cm[1];continue}
+
+        const rm=line.match(/\/\/\s*RVA:\s*0x([0-9A-Fa-f]+)/i);
+        if(rm){
+            lastRVA=parseInt(rm[1],16);
+            continue;
         }
 
-        // progress
-        const pct = Math.round(bytesRead / total * 100);
-        document.getElementById('progress').innerText =
-            `${pct}%  —  ${(bytesRead/1024/1024).toFixed(1)} / ${(total/1024/1024).toFixed(1)} MB`;
+        if(lastRVA!==null && targetSet.has(lastRVA)){
+            if(!result[lastRVA]){
+                if(line&&!line.startsWith('//')&&!line.startsWith('[')&&line!=='{'&&line!=='}'){
+                    result[lastRVA]={sig:line, cls:curClass};
+                    targetSet.delete(lastRVA);
+                }
+            }
+        }
     }
+    return result;
+}
 
-    const cnt = Object.keys(found).length;
-    document.getElementById('status').innerText = `✅ XONG — TÌM ĐƯỢC ${cnt}/47 RVA`;
-    document.getElementById('progress').innerText = '';
+// ─── RENDER UNITY RESULT ──────────────────────────────────────────────────────
+function renderUnity(rows, rvaMap, oSz, pSz){
+    const container=document.getElementById('unity-result');
+    let html='';
+
+    // summary stats
+    const c=t=>rows.filter(r=>r.type===t).length;
+    html+=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:18px">
+        <div class="stat-card"><span class="stat-val" style="color:var(--primary)">${rows.length}</span><div class="stat-lbl">Tổng patch</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--red)">${c('ret')}</span><div class="stat-lbl">RET killed</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--green)">${c('b')}</span><div class="stat-lbl">B Hook</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--orange)">${c('mov0')}</span><div class="stat-lbl">MOV #0</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--purple)">${c('mov1')}</span><div class="stat-lbl">MOV #1</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--primary)">${c('nop')}</span><div class="stat-lbl">NOP</div></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--muted)">${(()=>{const d=pSz-oSz;return(d>=0?'+':'')+fmtSz(Math.abs(d))})()}</span><div class="stat-lbl">Size diff</div></div>
+    </div>`;
+
+    // toolbar select + export
+    html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn-selall" onclick="selAll2(true)">&#9745; CHON TAT CA</button>
+        <button class="btn-selall" onclick="selAll2(false)">&#9744; BO CHON</button>
+        <button class="btn-export" id="btn2-export" style="display:inline-block" onclick="exportPatched2()">&#128190; EXPORT PATCHED FILE</button>
+        <span style="font-size:10px;color:var(--muted)" id="sel2-count">0 da chon</span>
+    </div>`;
+
+    // group by class
+    const grouped={};
+    rows.forEach(r=>{
+        const info=rvaMap[r.rva];
+        const cls=info?info.cls:'Unknown';
+        if(!grouped[cls]) grouped[cls]=[];
+        grouped[cls].push({...r, info});
+    });
+
+    // purpose map — known classes
+    const PURPOSE={
+        'AnoSDK':           {color:'gh-red',   icon:'🔴', title:'Anti-cheat Engine (Tencent AnoSDK)', desc:'Toàn bộ engine anti-cheat bị vô hiệu hóa — game không detect được cheat tool, không gửi security data lên server.'},
+        'LSynchrReport':    {color:'gh-red',   icon:'🔴', title:'Frame Sync Hash Check',              desc:'Tắt kiểm tra hash đồng bộ frame — server không phát hiện được dữ liệu battle bị chỉnh sửa.'},
+        'LFrameSyncBattleLogic':{color:'gh-red',icon:'🔴',title:'Battle Integrity Check',             desc:'Tắt CalcuBattleHash và SampleAndSendFrameSyncData — không gửi dữ liệu kiểm tra toàn vẹn trận đấu.'},
+        'BattleStatistic':  {color:'gh-orange',icon:'🟠', title:'Battle Report & Verify',             desc:'Tắt báo cáo kết quả trận, không verify điều kiện, không ghi nhận cheat command.'},
+        'ApolloEventReport':{color:'gh-orange',icon:'🟠', title:'Analytics & Event Tracking',         desc:'Tắt toàn bộ analytics — không tracking behavior người dùng, không gửi event lên Apollo/Tencent.'},
+        'IApolloHelper':    {color:'gh-orange',icon:'🟠', title:'Analytics Helper',                   desc:'Tắt AddCacheReport và OnLogin tracking — không log hoạt động người dùng.'},
+        'FirebasePush':     {color:'gh-orange',icon:'🟠', title:'Firebase Push & Analytics',          desc:'Tắt TryReportInfo và reportInfo — không gửi push notification analytics lên Firebase.'},
+        'LobbyMsgHandler':  {color:'gh-orange',icon:'🟠', title:'Security Data Report',               desc:'Tắt onTriggerSecurityDataReport — không gửi security check report về server lobby.'},
+        'SettlementSystem': {color:'gh-orange',icon:'🟠', title:'Post-match Report',                  desc:'Tắt cacheGameInfoData và ReportTLogDataToLobby — không gửi dữ liệu kết quả sau trận.'},
+        'CChatController':  {color:'gh-yellow',icon:'🟡', title:'Chat Complaint Controller',          desc:'Tắt xử lý complaint chat — không nhận/xử lý notification bị report qua chat.'},
+        'CChatNetUT':       {color:'gh-yellow',icon:'🟡', title:'Chat Network',                       desc:'Tắt RspSetChatRegion và On_Chat_Complaint — không xử lý gói tin chat complaint từ server.'},
+        'LInBattleMsgNetCore':{color:'gh-yellow',icon:'🟡',title:'In-battle Chat Network',            desc:'Tắt gửi chat trong trận — Send_Loaidng_Chat và TranslateChat bị vô hiệu.'},
+        'InBattleMsgNetCore':{color:'gh-yellow',icon:'🟡',title:'In-battle Complaint System',         desc:'Tắt toàn bộ complaint trong trận — PreConfig, InputChat, ChatComplaint đều bị kill.'},
+        'LGameBuilder':     {color:'gh-yellow',icon:'🟡', title:'Game Builder Handler',               desc:'Tắt Handle_SendInBattleMsg_ChatComplaint — không xử lý pipe cmd complaint trong trận.'},
+        'LStateSyncMsgHandler':{color:'gh-yellow',icon:'🟡',title:'State Sync Message Handler',       desc:'Tắt xử lý complaint message trong state sync — người dùng không bị ảnh hưởng bởi complaint.'},
+        'GameBuilder':      {color:'gh-yellow',icon:'🟡', title:'Game Builder Chat Handler',          desc:'Tắt Handle_On_ChatComplaint_NTF/RSP — không nhận phản hồi complaint từ server.'},
+        'LBaseRelayMsgSvrHandler':{color:'gh-yellow',icon:'🟡',title:'Relay Server Handler',          desc:'Tắt On_ChatRealtimeVoice_Complaint_RSP — không xử lý voice complaint response.'},
+        'GameSettings':     {color:'gh-blue',  icon:'🔵', title:'Device FPS Settings',               desc:'Patch FPS settings — unlock 60/90 FPS mode, bypass device check.'},
+        'CRoleInfo':        {color:'gh-purple', icon:'🟣', title:'Player Role Data',                  desc:'Patch dữ liệu player — VIP flags, hero count, skin availability.'},
+    };
+
+    // render theo group
+    const sortedGroups=Object.entries(grouped).sort((a,b)=>{
+        const pa=PURPOSE[a[0]]?0:1, pb=PURPOSE[b[0]]?0:1;
+        return pa-pb||a[0].localeCompare(b[0]);
+    });
+
+    let rows2_idx=0;
+    sortedGroups.forEach(([cls, clsRows])=>{
+        const pur=PURPOSE[cls]||{color:'gh-blue',icon:'⚪',title:cls,desc:'Không có thông tin chi tiết trong database.'};
+        html+=`<div class="group-block">
+            <div class="group-hdr ${pur.color}">
+                <span>${pur.icon}</span>
+                <span style="flex:1"><b>${pur.title}</b> &nbsp;<span style="opacity:.6;font-size:9px;font-weight:normal">(${clsRows.length} patch)</span></span>
+            </div>
+            <div style="font-size:10px;color:var(--yellow);padding:6px 14px 10px;background:#0d1008;border:1px solid var(--border);border-radius:6px;margin-bottom:8px">${pur.desc}</div>`;
+
+        clsRows.forEach(r=>{
+            const rv=r.rva.toString(16).toUpperCase().padStart(8,'0');
+            const sig=r.info?r.info.sig:'Không tìm thấy trong dump.cs';
+            const purpose=getPurpose(r, r.info);
+            html+=`<div class="func-card">
+                <div class="func-head" onclick="toggleFunc(this)">
+                    <input type="checkbox" class="chk u2-chk" checked data-idx="${rows2_idx++}" onclick="event.stopPropagation();updateSel2()" style="flex-shrink:0;margin-right:4px">
+                    <div class="func-rva" onclick="event.stopPropagation();copyTxt('${rv}')">${rv}</div>
+                    <span class="func-name" title="${sig}">${r.info?getFuncName(r.info.sig):rv}</span>
+                    <span class="func-type"><span class="type-badge ${r.cls}">${r.lbl}</span></span>
+                </div>
+                <div class="func-sig">
+                    <code style="font-size:10px;color:var(--muted)">${sig}</code>
+                </div>
+                <div class="func-purpose">
+                    💡 ${purpose}
+                </div>
+            </div>`;
+        });
+        html+='</div>';
+    });
+
+    container.innerHTML=html;
+}
+
+function toggleFunc(el){
+    el.nextElementSibling.classList.toggle('open');
+    el.nextElementSibling.nextElementSibling.classList.toggle('open');
+}
+
+function getFuncName(sig){
+    const m=sig.match(/\b(\w+)\s*\(/);
+    return m?m[1]:sig.substring(0,40);
+}
+
+function getPurpose(r, info){
+    if(!info) return 'Không tìm thấy trong dump.cs — có thể là compiler-generated method.';
+    const sig=info.sig;
+    const t=r.type;
+
+    // pattern based
+    if(t==='ret'&&sig.includes('void')) return `Function bị kill hoàn toàn — gọi vào return ngay, không thực thi gì.`;
+    if(t==='mov0') return `Force return false/0 — mọi check điều kiện trong function này đều bị bypass, luôn trả về false/null.`;
+    if(t==='mov1') return `Force return true/1 — function luôn trả về true, bypass mọi validation.`;
+    if(t==='nop')  return `Instruction bị NOP — lệnh kiểm tra/branch bị vô hiệu hóa, flow tiếp tục không bị chặn.`;
+    if(t==='b')    return `Redirect sang hook trampoline — function bị chuyển hướng sang custom handler trong __PP_OFFSETS.`;
+
+    if(sig.includes('Report')) return `Function báo cáo bị kill — không gửi data lên server.`;
+    if(sig.includes('Check'))  return `Function kiểm tra bị kill — mọi check đều bị bypass.`;
+    if(sig.includes('Verify')) return `Function verify bị kill — không xác minh tính hợp lệ.`;
+    if(sig.includes('Send'))   return `Function gửi data bị kill — không gửi bất kỳ thông tin nào lên server.`;
+    if(sig.includes('Init'))   return `Function khởi tạo bị kill — module không được khởi động.`;
+
+    return `Bị ${t.toUpperCase()} — ${toHex(r.patch,4)} thay thế instruction đầu tiên.`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TAB 2 — SELECT & EXPORT
+// ═══════════════════════════════════════════════════════════════════════════════
+function selAll2(v){
+    document.querySelectorAll('.u2-chk').forEach(c=>c.checked=v);
+    updateSel2();
+}
+function updateSel2(){
+    const n=document.querySelectorAll('.u2-chk:checked').length;
+    const t=document.querySelectorAll('.u2-chk').length;
+    const el=document.getElementById('sel2-count');
+    if(el) el.innerText=n+' / '+t+' đã chọn';
+    const btn=document.getElementById('btn2-export');
+    if(btn) btn.innerText='💾 EXPORT ('+n+' patch)';
+}
+async function exportPatched2(){
+    if(!FILES['2-orig']){alert('Chưa có file gốc!');return}
+    const origBuf=await readBuf(FILES['2-orig']);
+    const out=new Uint8Array(origBuf.slice(0));
+    const checks=document.querySelectorAll('.u2-chk');
+    let applied=0;
+    checks.forEach(chk=>{
+        if(!chk.checked) return;
+        const idx=parseInt(chk.dataset.idx);
+        const r=rows2[idx];
+        if(!r) return;
+        out.set(r.patch, r.rva);
+        applied++;
+    });
+    const blob=new Blob([out],{type:'application/octet-stream'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    const origName=FILES['2-orig'].name;
+    a.download=origName.replace(/(\.[^.]+)?$/,'_patched$1')||'patched_unity';
+    a.click();
+    URL.revokeObjectURL(url);
+    const t=document.getElementById('toast');
+    t.innerText=`✓ EXPORTED \${applied} PATCHES`;
+    t.className='show';
+    setTimeout(()=>{t.innerText='✓ COPIED';t.className=''},2500);
 }
 </script>
 
