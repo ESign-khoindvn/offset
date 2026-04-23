@@ -776,24 +776,114 @@ function getFuncName(sig){
 }
 
 function getPurpose(r, info){
-    if(!info) return 'Không tìm thấy trong dump.cs — có thể là compiler-generated method.';
-    const sig=info.sig;
+    if(!info) return '<b>Không tìm thấy trong dump.cs</b> — Có thể là compiler-generated method hoặc RVA không khớp với version dump.';
+    const sig=info.sig.trim();
+    const cls=info.cls||'';
     const t=r.type;
+    const fname=getFuncName(sig);
 
-    // pattern based
-    if(t==='ret'&&sig.includes('void')) return `Function bị kill hoàn toàn — gọi vào return ngay, không thực thi gì.`;
-    if(t==='mov0') return `Force return false/0 — mọi check điều kiện trong function này đều bị bypass, luôn trả về false/null.`;
-    if(t==='mov1') return `Force return true/1 — function luôn trả về true, bypass mọi validation.`;
-    if(t==='nop')  return `Instruction bị NOP — lệnh kiểm tra/branch bị vô hiệu hóa, flow tiếp tục không bị chặn.`;
-    if(t==='b')    return `Redirect sang hook trampoline — function bị chuyển hướng sang custom handler trong __PP_OFFSETS.`;
+    // Type description
+    const typeDesc={
+        'ret':  `<span style="color:var(--red)">RET</span> — Instruction đầu tiên bị thay bằng <code>C0 03 5F D6</code> (ARM64 RET). Function bị <b>kill hoàn toàn</b>, gọi vào là return ngay lập tức, không thực thi bất kỳ logic nào bên trong.`,
+        'mov0': `<span style="color:var(--orange)">MOV + RET</span> — Bị thay bằng <code>mov w0/x0, #0 / ret</code>. Function luôn trả về <b>false / 0 / null</b> bất kể tham số đầu vào. Mọi check điều kiện đều bị bypass.`,
+        'mov1': `<span style="color:var(--purple)">MOV + RET</span> — Bị thay bằng <code>mov w0/x0, #1 / ret</code>. Function luôn trả về <b>true / 1</b>, bypass toàn bộ validation bên trong.`,
+        'nop':  `<span style="color:var(--primary)">NOP</span> — Instruction bị thay bằng <code>1F 20 03 D5</code> (ARM64 NOP). Lệnh điều kiện/branch bị vô hiệu, execution flow tiếp tục không bị chặn.`,
+        'b':    `<span style="color:var(--green)">B HOOK</span> — Bị thay bằng lệnh branch <code>B &lt;addr&gt;</code>. Function bị redirect sang custom hook handler trong segment <b>__PP_OFFSETS</b>. Handler có thể intercept, modify, hoặc replace toàn bộ logic.`,
+        'other':`<span style="color:var(--muted)">PATCH</span> — Bytes đầu function bị ghi đè trực tiếp.`,
+    }[t]||`Patch type: ${t}`;
 
-    if(sig.includes('Report')) return `Function báo cáo bị kill — không gửi data lên server.`;
-    if(sig.includes('Check'))  return `Function kiểm tra bị kill — mọi check đều bị bypass.`;
-    if(sig.includes('Verify')) return `Function verify bị kill — không xác minh tính hợp lệ.`;
-    if(sig.includes('Send'))   return `Function gửi data bị kill — không gửi bất kỳ thông tin nào lên server.`;
-    if(sig.includes('Init'))   return `Function khởi tạo bị kill — module không được khởi động.`;
+    // Specific function analysis
+    const FUNC_DB = {
+        // AnoSDK
+        'InitEx':                   'Hàm khởi tạo chính của AnoSDK — engine anti-cheat Tencent. Bị kill → AnoSDK không bao giờ được khởi động, toàn bộ hệ thống phát hiện cheat không hoạt động.',
+        'AnoSDKInitEx':             'Native extern call khởi tạo AnoSDK ở tầng thấp nhất. Bị kill → AnoSDK hoàn toàn câm điếc từ tầng native.',
+        'AnoSDKOnResume':           'Gọi khi app resume từ background — AnoSDK re-initialize tại đây. Bị kill → sau khi minimize rồi mở lại game, AnoSDK vẫn không hoạt động.',
+        'AnoSDKDelReportData4':     'Native extern dùng để giải phóng report data trước khi gửi lên server. Bị kill → pipeline gửi report bị gãy ở bước cleanup.',
+        'AnoSDKFree':               'Native extern giải phóng bộ nhớ AnoSDK. Bị kill → AnoSDK không thể cleanup, mọi gói tin security đều bị block.',
+        // LSynchrReport
+        'Reset':                    'Reset toàn bộ trạng thái sync report. Bị kill → LSynchrReport không bao giờ được reset về trạng thái sạch, mọi hash check đều fail silent.',
+        'CloseUpload':              'Đóng kết nối upload hash data lên server. Bị kill → upload channel bị force close ngay từ đầu, không bao giờ gửi được hash data.',
+        'OnNotifyHashCheckUnsyncByDs': 'Callback khi dedicated server phát hiện hash không khớp giữa các client. Bị kill → game không phản ứng khi server phát hiện desync — không kick, không cảnh báo.',
+        'DequeHashValueByFrameNum': 'Lấy hash value theo frame number để so sánh. Bị kill → pipeline so sánh hash bị gãy, server không thể verify tính toàn vẹn của battle data.',
+        // LFrameSyncBattleLogic
+        'OnActorRevive':            'Xử lý event hồi sinh actor trong trận. Bị kill → event revive không được ghi nhận vào frame sync hash, làm cho hash check luôn bị bypass.',
+        'CalcuBattleHash':          'Tính toán hash toàn bộ trạng thái battle theo từng frame. Bị kill → hash luôn = 0 hoặc không được tính, server không thể phát hiện bất kỳ sự thay đổi nào trong battle state.',
+        'SampleAndSendFrameSyncData': 'Sample và gửi frame sync data định kỳ lên server để so sánh. Bị kill → server không nhận được sync data, không thể detect speedhack hay state manipulation.',
+        // BattleStatistic
+        'IsNeedReportCompetitionData': 'Kiểm tra xem có cần report dữ liệu competition không. Bị kill → luôn skip report, không gửi bất kỳ competition data nào lên server.',
+        'ResetCheetCommandSetWarmBattleResultInfo': 'Reset thông tin cheat command trong warm battle. Bị hook → handler tùy chỉnh thay thế, có thể modify data trước khi gửi.',
+        'CreatePetData':            'Tạo dữ liệu pet trong settlement. Bị kill → pet data không được ghi nhận, settlement thiếu thông tin.',
+        'CreateDragonStatistInfo':  'Tạo thống kê dragon trong game over summary. Bị kill → dragon stats không được ghi vào report.',
+        'GeneralShenFuData':        'Tạo dữ liệu ShenFu (thần phù) cho settlement. Bị kill → ShenFu stats không được report lên server.',
+        'VerifyCondition':          'Verify điều kiện star condition trong battle statistic. Bị kill → mọi điều kiện đều không được xác minh, có thể claim star/achievement tùy ý.',
+        // Apollo Analytics
+        'ReportEventOpenApp':       'Báo cáo event mở app lên Apollo analytics. Bị kill → Tencent không biết user có mở app không, mất tracking session.',
+        'AddCacheReport':           'Cache một analytics event để gửi batch sau. Bị kill → không có event nào được cache, toàn bộ analytics pipeline bị block từ đầu.',
+        'OnLogin':                  'Trigger khi user login vào GCloud platform. Bị kill → login event không được track, session analytics bị mất.',
+        // Firebase
+        'TryReportInfo':            'Thử gửi push notification info lên Firebase. Bị kill → Firebase không nhận được device info, không gửi được push notification.',
+        'reportInfo':               'Gửi thực sự device/session info lên Firebase. Bị kill → Firebase hoàn toàn mù về thiết bị này.',
+        'GetPushExtraDictObjects':  'Lấy extra data để đính kèm vào push payload. Bị kill → push payload trống, Firebase không có data để phân tích.',
+        // Lobby
+        'TrySkipGuideLevel1':       'Skip hướng dẫn level 1 trong lobby. Bị kill → progression tracking bị gián đoạn.',
+        'onTriggerSecurityDataReport': 'Trigger gửi security data report khi có sự kiện nghi vấn. Bị kill → security report không bao giờ được gửi lên server, dù phát hiện bất thường.',
+        // Settlement
+        'cacheGameInfoData':        'Cache thông tin game để gửi về lobby sau khi kết thúc. Bị kill → post-game data không được lưu, settlement không có data để report.',
+        'ReportTLogDataToLobby':    'Gửi TLog data về lobby server sau trận. Bị kill → lobby server không nhận được kết quả trận, không cập nhật được rank/stats.',
+        'CommonOnRequestAddMatchBlack': 'Xử lý request thêm người vào blacklist sau trận. Bị kill → không ai bị blacklist được dù bị report.',
+        // CChat
+        'CChatNetUT_On_Chat_NTFMainThread': 'Xử lý notification chat trên main thread. Bị kill → chat notification không được xử lý, hệ thống report chat bị deaf.',
+        'CChatNetUT_On_Chat_Complaint_NTF': 'Nhận notification khi bị report qua chat. Bị kill → không bao giờ nhận được complaint notification.',
+        'CChatNetUT_On_Chat_Complaint_RSP': 'Xử lý response sau khi gửi complaint chat. Bị kill → complaint pipeline không hoàn thành.',
+        'RspSetChatRegion':         'Response set chat region từ server. Bị kill → chat region không được cập nhật.',
+        'On_Chat_Complaint_NTF':    'Notification complaint chat (version 2). Bị kill → backup complaint handler cũng bị tắt.',
+        // InBattle
+        'Send_Loaidng_Chat':        'Gửi chat trong loading screen. Bị kill → không gửi được message loading chat lên server, không bị log.',
+        'SendInBattleMsg_TranslateChat': 'Gửi request dịch chat trong trận. Bị kill → translation request không được gửi, mất tracking chat behavior.',
+        'SendInBattleMsg_PreConfig': 'Gửi pre-config message trong trận. Bị kill → in-battle message pipeline không được khởi tạo.',
+        'OnSendInBattleMsg_InputChat': 'Handle khi user gõ chat trong trận. Bị kill → chat input không được log/track bởi server.',
+        'SendInBattleMsg_ChatComplaint': 'Gửi complaint qua chat trong trận. Bị kill → user không thể report người khác qua chat trong trận.',
+        'Handle_SendSendInLoaing_LikeChat': 'Xử lý pipe command like chat trong loading. Bị kill → like chat command bị drop.',
+        'Handle_SendInBattleMsg_ChatComplaint': 'Xử lý pipe command complaint trong trận. Bị kill → complaint command không được forward lên server.',
+        'Handle_On_Chat_NTF':       'Handle notification chat từ server. Bị kill → chat notification từ server bị ignore.',
+        'Handle_On_ChatComplaint_NTF': 'Handle notification complaint từ server. Bị kill → server notify complaint cũng không được xử lý.',
+        'Handle_On_ChatComplaint_RSP': 'Handle response complaint từ server. Bị kill → response về complaint bị bỏ qua.',
+        'On_ChatRealtimeVoice_Complaint_RSP': 'Response complaint realtime voice. Bị kill → voice complaint không hoàn thành vòng lặp request-response.',
+        // GameSettings
+        'get_Supported90FPSMode':   'Kiểm tra device có hỗ trợ 90FPS không. Patch → trả về true/false cố định, bypass device check.',
+        'get_Supported60FPSMode':   'Kiểm tra device có hỗ trợ 60FPS. Patch → force enable 60FPS bất kể device spec.',
+        'CheckDeviceSupport60FPS_IOS': 'Check cụ thể iOS device có đủ điều kiện 60FPS không. Bị kill → device check không chạy, FPS không bị giới hạn theo device.',
+        'get_SupportedBoth60FPS_CameraHeight': 'Check 60FPS kết hợp camera height. Bị kill → combined check bị bypass.',
+        'ResetRenderAndParticleQuality': 'Reset render và particle quality về mức mặc định. Bị kill → quality reset không chạy, giữ nguyên custom settings.',
+        'InitAfterBaseSystemInitialiazed': 'Init game settings sau khi base system xong. Bị kill → settings không được khởi tạo đúng cách.',
+        // CRoleInfo
+        'GetHaveHeroCount':         'Đếm số hero user đang có. Bị hook → có thể trả về số hero tùy chỉnh.',
+        'GetHeroSkinCount':         'Đếm số skin hero. Bị hook → fake skin count.',
+        'IsFreeHeroAndSelfDontHave': 'Kiểm tra hero có phải free và user chưa có không. Bị kill/hook → bypass điều kiện unlock hero free.',
+        'set_GameVipScore':         'Set VIP score của player. Bị hook → có thể set VIP score tùy ý.',
+        'IsCanBuySkinButNotHaveHero': 'Check xem có thể mua skin nhưng chưa có hero không. Bị kill → bypass điều kiện mua skin.',
+        'SetVipFlags':              'Set VIP flags cho account. Bị hook → set VIP status tùy ý.',
+    };
 
-    return `Bị ${t.toUpperCase()} — ${toHex(r.patch,4)} thay thế instruction đầu tiên.`;
+    const specific = FUNC_DB[fname] || null;
+
+    let out = `<b>${fname}</b><br>`;
+    out += `<span style="font-size:9px;color:var(--muted)">${cls}</span><br><br>`;
+    out += `<b>Cách patch:</b> ${typeDesc}<br><br>`;
+    if(specific){
+        out += `<b>Tác động:</b> ${specific}`;
+    } else {
+        // generic by pattern
+        let impact = '';
+        if(sig.includes('void')&&t==='ret') impact=`Void function bị kill hoàn toàn — không thực thi logic nào, mọi side effect (ghi log, gửi data, update state) đều bị bỏ qua.`;
+        else if(t==='mov0') impact=`Trả về false/0/null — mọi caller nhận kết quả âm, các check điều kiện dựa vào function này đều bị bypass.`;
+        else if(t==='mov1') impact=`Trả về true/1 — mọi caller nhận kết quả dương, validation/gate check đều bị mở.`;
+        else if(t==='nop')  impact=`Branch/check bị NOP — execution không bị redirect, tiếp tục thẳng bất kể điều kiện.`;
+        else if(t==='b')    impact=`Redirect sang hook — logic gốc bị thay thế hoàn toàn bởi custom handler.`;
+        else impact=`Bytes gốc ${toHex(r.orig,4)} → ${toHex(r.patch,4)}.`;
+        out += `<b>Tác động:</b> ${impact}`;
+    }
+    return out;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
